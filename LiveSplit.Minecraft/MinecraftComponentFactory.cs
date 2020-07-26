@@ -5,7 +5,6 @@ using System.Reflection;
 
 namespace LiveSplit.Minecraft
 {
-    //TODO CHECK URLS OF ALL OF THIS STUFF
     class MinecraftComponentFactory : IComponentFactory
     {
         public string ComponentName => "Minecraft IGT";

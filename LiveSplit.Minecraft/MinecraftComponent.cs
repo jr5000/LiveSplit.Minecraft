@@ -23,7 +23,6 @@ namespace LiveSplit.Minecraft
 
         // Limit the rate at which some operations are done since they are too expensive to run on every udpate()
         private DateTime nextHookCheck;
-        private DateTime nextSaveFolderCheck;
         private DateTime nextIGTCheck;
 
         // Unused for now
@@ -53,28 +52,6 @@ namespace LiveSplit.Minecraft
             if (memoryUtils.MinecraftProcess == null && !ShouldCheckHook()) return;
             // If the hook failed pass
             if (!memoryUtils.HookProcess()) return;
-
-            if (ShouldCheckSaveFolder())
-            {
-                var savesCount = Directory.EnumerateDirectories(Properties.Settings.Default.SavesPath).Count();
-
-                // If saves count wasn't initialized yet skip this round
-                if (oldSavesCount == -1)
-                {
-                    oldSavesCount = savesCount;
-                    return;
-                }
-
-                if (savesCount != oldSavesCount)
-                {
-                    if (savesCount > oldSavesCount)
-                    {
-                        // The saves count has increased, assume a new world has been created and set the new level.dat path
-                        FindLatestSaveLevelPath();
-                    }
-                    oldSavesCount = savesCount;
-                }
-            }
 
             if (ShouldCheckIGT())
             {
@@ -120,21 +97,6 @@ namespace LiveSplit.Minecraft
             }
         }
 
-        private bool ShouldCheckSaveFolder()
-        {
-            if (nextSaveFolderCheck != null && DateTime.Now < nextSaveFolderCheck)
-            {
-                // Not yet
-                return false;
-            }
-            else
-            {
-                // Haven't attempted yet or it's time to do so
-                nextSaveFolderCheck = DateTime.Now.AddMilliseconds(250);
-                return true;
-            }
-        }
-
         private bool ShouldCheckIGT()
         {
             if (nextIGTCheck != null && DateTime.Now < nextIGTCheck)
@@ -163,20 +125,16 @@ namespace LiveSplit.Minecraft
             }
             catch
             {
+                timer.Reset();
                 MessageBox.Show("Couldn't find the Minecraft world save.\n\n" +
                     "Check that your saves location is correct on the settings page and there is already a save to extract the IGT from.",
                     ComponentName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                timer.Reset();
             }
         }
 
         private void OnStart(object sender, EventArgs e)
         {
-            if (latestSaveLevelPath == null)
-            {
-                // User manually starts the timer and the component hasn't detected a new save
-                FindLatestSaveLevelPath();
-            }
+            FindLatestSaveLevelPath();
         }
 
         private void OnSettingsChanged(object sender, PropertyChangedEventArgs e)
