@@ -5,6 +5,11 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveSplit.Minecraft", "LiveSplit.Minecraft\LiveSplit.Minecraft.csproj", "{096DD509-89C7-40C6-919C-31352BF365B2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5D6BC2EC-3442-424F-A1D4-7C6DC83D6438}"
+	ProjectSection(SolutionItems) = preProject
+		Updates.xml = Updates.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
