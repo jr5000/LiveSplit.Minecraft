@@ -28,7 +28,6 @@ namespace LiveSplit.Minecraft
         // Unused for now
         private bool autosplitterEnabled;
 
-        private int oldSavesCount = -1;
         private string latestSaveLevelPath;
 
         public MinecraftComponent(LiveSplitState state)
@@ -53,7 +52,12 @@ namespace LiveSplit.Minecraft
             // If the hook failed pass
             if (!memoryUtils.HookProcess()) return;
 
-            if (ShouldCheckIGT())
+            if (autosplitterEnabled)
+            {
+                timer.CurrentState.SetGameTime(TimeSpan.FromSeconds(memoryUtils.GetTicks() / 20.0));
+            }
+
+            if (!autosplitterEnabled && ShouldCheckIGT())
             {
                 // If the timer is not running yet check if level.dat exists first to avoid exceptions during world creation
                 if (timer.CurrentState.CurrentPhase == TimerPhase.NotRunning && !File.Exists(latestSaveLevelPath)) return;
@@ -135,6 +139,7 @@ namespace LiveSplit.Minecraft
         private void OnStart(object sender, EventArgs e)
         {
             FindLatestSaveLevelPath();
+            memoryUtils.SetupAutoSplitterStuff();
         }
 
         private void OnSettingsChanged(object sender, PropertyChangedEventArgs e)
