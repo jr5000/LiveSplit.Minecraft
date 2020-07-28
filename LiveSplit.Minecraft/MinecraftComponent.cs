@@ -1,4 +1,5 @@
-﻿using fNbt;
+﻿// fNbt built from https://github.com/flori-schwa/fNbt since that includes support for TAG_Long_Array
+using fNbt;
 using LiveSplit.Model;
 using LiveSplit.UI;
 using LiveSplit.UI.Components;
@@ -28,8 +29,7 @@ namespace LiveSplit.Minecraft
         // Unused for now
         private bool autosplitterEnabled;
 
-        private int oldSavesCount = -1;
-        private string latestSaveLevelPath;
+        private string latestSaveStatsPath;
 
         public MinecraftComponent(LiveSplitState state)
         {
@@ -55,12 +55,11 @@ namespace LiveSplit.Minecraft
 
             if (ShouldCheckIGT())
             {
-                // If the timer is not running yet check if level.dat exists first to avoid exceptions during world creation
-                if (timer.CurrentState.CurrentPhase == TimerPhase.NotRunning && !File.Exists(latestSaveLevelPath)) return;
+                // If the timer is not running yet check if the stats folder exists first to avoid exceptions during world creation
+                if (timer.CurrentState.CurrentPhase == TimerPhase.NotRunning && !Directory.Exists(latestSaveStatsPath)) return;
 
-                // Update IGT, it uses level.dat since that dates backs to 1.0 and it's faster than reading json stats
-                // fNbt built from https://github.com/flori-schwa/fNbt since that includes support for TAG_Long_Array
-                var igt = TimeSpan.FromSeconds(new NbtFile(latestSaveLevelPath).RootTag.First()["Time"].LongValue / 20.0);
+                // Update IGT, it uses the stats.json file since level.dat is considered inaccurate
+                var igt = TimeSpan.FromSeconds(ExtractTicks() / 20.0);
                 if (timer.CurrentState.CurrentPhase == TimerPhase.Running)
                 {
                     // Run in process, update time normally
@@ -107,7 +106,7 @@ namespace LiveSplit.Minecraft
             else
             {
                 // Haven't attempted yet or it's time to do so
-                nextIGTCheck = DateTime.Now.AddMilliseconds(250);
+                nextIGTCheck = DateTime.Now.AddMilliseconds(1000);
                 return true;
             }
         }
@@ -121,7 +120,7 @@ namespace LiveSplit.Minecraft
                     .OrderByDescending(x => x.LastWriteTime)
                     .First().FullName;
 
-                latestSaveLevelPath = Path.Combine(latestSavePath, "level.dat");
+                latestSaveStatsPath = Path.Combine(latestSavePath, "stats");
             }
             catch
             {
@@ -130,6 +129,16 @@ namespace LiveSplit.Minecraft
                     "Check that your saves location is correct on the settings page and there is already a save to extract the IGT from.",
                     ComponentName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private int ExtractTicks()
+        {
+            var statsFile = Directory.EnumerateFiles(latestSaveStatsPath, "*.json").FirstOrDefault();
+            var statsText = File.ReadAllLines(statsFile)[0];
+            var statStart = statsText.IndexOf("inute\":")+7;
+            var statEnd = statsText.IndexOf(",", statStart);
+
+            return Int32.Parse(statsText.Substring(statStart, statEnd - statStart));
         }
 
         private void OnStart(object sender, EventArgs e)
