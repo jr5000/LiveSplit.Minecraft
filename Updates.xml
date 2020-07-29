@@ -1,4 +1,13 @@
 ﻿<updates>
+	<update version="1.0.2">
+		<files>
+			<file path="Components/LiveSplit.Minecraft.dll" status="changed"/>
+			<file path="Components/fNbt.dll" status="changed"/>
+		</files>
+		<changelog>
+			<change>Fixed the auto-update system.</change>
+		</changelog>
+	</update>
 	<update version="1.0.1">
 		<files>
 			<file path="Components/LiveSplit.Minecraft.dll" status="changed"/>
