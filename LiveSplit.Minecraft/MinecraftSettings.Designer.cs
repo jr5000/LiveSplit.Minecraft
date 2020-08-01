@@ -36,7 +36,10 @@
             this.grpBoxFAQ = new System.Windows.Forms.GroupBox();
             this.labelFAQ = new System.Windows.Forms.Label();
             this.labelVersion = new System.Windows.Forms.Label();
+            this.grpBoxAutosplitter = new System.Windows.Forms.GroupBox();
+            this.checkBoxAutosplitterEnabled = new System.Windows.Forms.CheckBox();
             this.grpBoxFAQ.SuspendLayout();
+            this.grpBoxAutosplitter.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtBoxSavesPath
@@ -79,7 +82,7 @@
             // grpBoxFAQ
             // 
             this.grpBoxFAQ.Controls.Add(this.labelFAQ);
-            this.grpBoxFAQ.Location = new System.Drawing.Point(6, 95);
+            this.grpBoxFAQ.Location = new System.Drawing.Point(6, 139);
             this.grpBoxFAQ.Name = "grpBoxFAQ";
             this.grpBoxFAQ.Size = new System.Drawing.Size(364, 246);
             this.grpBoxFAQ.TabIndex = 5;
@@ -104,20 +107,44 @@
             this.labelVersion.TabIndex = 6;
             this.labelVersion.Text = "Version ?.?.? by Jorkoh";
             // 
+            // grpBoxAutosplitter
+            // 
+            this.grpBoxAutosplitter.Controls.Add(this.checkBoxAutosplitterEnabled);
+            this.grpBoxAutosplitter.Location = new System.Drawing.Point(6, 82);
+            this.grpBoxAutosplitter.Name = "grpBoxAutosplitter";
+            this.grpBoxAutosplitter.Size = new System.Drawing.Size(364, 51);
+            this.grpBoxAutosplitter.TabIndex = 7;
+            this.grpBoxAutosplitter.TabStop = false;
+            this.grpBoxAutosplitter.Text = "Autosplitter (experimental)";
+            // 
+            // checkBoxAutosplitterEnabled
+            // 
+            this.checkBoxAutosplitterEnabled.AutoSize = true;
+            this.checkBoxAutosplitterEnabled.Location = new System.Drawing.Point(6, 22);
+            this.checkBoxAutosplitterEnabled.Name = "checkBoxAutosplitterEnabled";
+            this.checkBoxAutosplitterEnabled.Size = new System.Drawing.Size(114, 17);
+            this.checkBoxAutosplitterEnabled.TabIndex = 0;
+            this.checkBoxAutosplitterEnabled.Text = "Enable Autosplitter";
+            this.checkBoxAutosplitterEnabled.UseVisualStyleBackColor = true;
+            this.checkBoxAutosplitterEnabled.CheckedChanged += new System.EventHandler(this.CheckBoxAutosplitterEnabled_CheckedChanged);
+            // 
             // MinecraftSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.grpBoxFAQ);
+            this.Controls.Add(this.grpBoxAutosplitter);
             this.Controls.Add(this.labelVersion);
             this.Controls.Add(this.btnResetSavesPath);
             this.Controls.Add(this.btnChangeSavesPath);
             this.Controls.Add(this.labelSavesPath);
             this.Controls.Add(this.txtBoxSavesPath);
-            this.Controls.Add(this.grpBoxFAQ);
             this.Name = "MinecraftSettings";
             this.Size = new System.Drawing.Size(475, 485);
             this.Load += new System.EventHandler(this.MinecraftSettings_Load);
             this.grpBoxFAQ.ResumeLayout(false);
+            this.grpBoxAutosplitter.ResumeLayout(false);
+            this.grpBoxAutosplitter.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -131,5 +158,7 @@
         private System.Windows.Forms.GroupBox grpBoxFAQ;
         private System.Windows.Forms.Label labelFAQ;
         private System.Windows.Forms.Label labelVersion;
+        private System.Windows.Forms.GroupBox grpBoxAutosplitter;
+        private System.Windows.Forms.CheckBox checkBoxAutosplitterEnabled;
     }
 }

@@ -45,6 +45,7 @@ namespace LiveSplit.Minecraft
         private void MinecraftSettings_Load(object sender, EventArgs e)
         {
             txtBoxSavesPath.Text = Properties.Settings.Default.SavesPath;
+            checkBoxAutosplitterEnabled.Checked = Properties.Settings.Default.AutosplitterEnabled;
             labelVersion.Text = $"Version {Assembly.GetExecutingAssembly().GetName().Version} by Jorkoh";
         }
 
@@ -67,6 +68,12 @@ namespace LiveSplit.Minecraft
             Properties.Settings.Default.Save();
 
             txtBoxSavesPath.Text = Properties.Settings.Default.SavesPath;
+        }
+
+        private void CheckBoxAutosplitterEnabled_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.AutosplitterEnabled = checkBoxAutosplitterEnabled.Checked;
+            Properties.Settings.Default.Save();
         }
     }
 }

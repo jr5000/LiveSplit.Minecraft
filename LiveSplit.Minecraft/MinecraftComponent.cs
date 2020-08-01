@@ -17,9 +17,10 @@ namespace LiveSplit.Minecraft
 {
     public class MinecraftComponent : UI.Components.IComponent
     {
-        private readonly TimerModel timer;
-        private readonly MinecraftMemory memoryUtils;
-        private readonly MinecraftSettings settings;
+        public readonly TimerModel timer;
+        public readonly MinecraftMemory memory;
+        public readonly MinecraftAutosplitter autosplitter;
+        public readonly MinecraftSettings settings;
 
         // Limit the rate at which some operations are done since they are too expensive to run on every udpate()
         private DateTime nextHookCheck;
@@ -32,29 +33,30 @@ namespace LiveSplit.Minecraft
 
         public MinecraftComponent(LiveSplitState state)
         {
-            memoryUtils = new MinecraftMemory(this);
-            settings = new MinecraftSettings(this);
-
             timer = new TimerModel() { CurrentState = state };
+
+            settings = new MinecraftSettings(this);
+            memory = new MinecraftMemory(this);
+            autosplitter = new MinecraftAutosplitter(this);
+
             state.OnStart += OnStart;
 
             autosplitterEnabled = Properties.Settings.Default.AutosplitterEnabled;
-
             Properties.Settings.Default.PropertyChanged += OnSettingsChanged;
+
+            if (autosplitterEnabled)
+            {
+                SetupAutosplitter();
+            }
         }
 
         public void Update(IInvalidator invalidator, LiveSplitState state, float width, float height, LayoutMode mode)
         {
             state.IsGameTimePaused = true;
 
-            // If we are not hooked and we shouldn't try yet pass
-            if (memoryUtils.MinecraftProcess == null && !ShouldCheckHook()) return;
-            // If the hook failed pass
-            if (!memoryUtils.HookProcess()) return;
-
-            if (autosplitterEnabled)
+            if (autosplitterEnabled && memory.IsStillHooked())
             {
-                timer.CurrentState.SetGameTime(TimeSpan.FromSeconds(memoryUtils.GetTicks() / 20.0));
+                memory.Update();
             }
 
             if (!autosplitterEnabled && ShouldCheckIGT())
@@ -83,21 +85,6 @@ namespace LiveSplit.Minecraft
                     timer.CurrentState.CurrentSplitIndex++;
                     timer.CurrentState.Run.HasChanged = true;
                 }
-            }
-        }
-
-        private bool ShouldCheckHook()
-        {
-            if (nextHookCheck != null && DateTime.Now < nextHookCheck)
-            {
-                // Not yet
-                return false;
-            }
-            else
-            {
-                // Haven't attempted yet or it's time to do so
-                nextHookCheck = DateTime.Now.AddMilliseconds(1000);
-                return true;
             }
         }
 
@@ -139,7 +126,6 @@ namespace LiveSplit.Minecraft
         private void OnStart(object sender, EventArgs e)
         {
             FindLatestSaveLevelPath();
-            memoryUtils.SetupAutoSplitterStuff();
         }
 
         private void OnSettingsChanged(object sender, PropertyChangedEventArgs e)
@@ -150,14 +136,27 @@ namespace LiveSplit.Minecraft
             if (autosplitterEnabled == newAutosplitterEnabled) return;
 
             autosplitterEnabled = newAutosplitterEnabled;
-            timer.Reset();
+
             if (autosplitterEnabled)
             {
-                timer.CurrentState.CurrentTimingMethod = TimingMethod.GameTime;
+                SetupAutosplitter();
+            }
+            else
+            {
+                timer.Reset();
             }
         }
 
-        public void Dispose() { }
+        private void SetupAutosplitter()
+        {
+            timer.Reset();
+            timer.CurrentState.CurrentTimingMethod = TimingMethod.GameTime;
+            autosplitter.Setup();
+        }
+
+        public void Dispose() {
+            autosplitter.Dispose();
+        }
 
         public Control GetSettingsControl(LayoutMode mode) => settings;
 
