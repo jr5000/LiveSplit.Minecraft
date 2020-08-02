@@ -45,7 +45,15 @@ namespace LiveSplit.Minecraft
         private void MinecraftSettings_Load(object sender, EventArgs e)
         {
             txtBoxSavesPath.Text = Properties.Settings.Default.SavesPath;
+
             checkBoxAutosplitterEnabled.Checked = Properties.Settings.Default.AutosplitterEnabled;
+
+            grpBoxAutsplitterSettings.Enabled = Properties.Settings.Default.AutosplitterEnabled;
+
+            checkBoxResetOnCreation.Checked = Properties.Settings.Default.ResetOnCreation;
+            checkBoxStartOnJoin.Checked = Properties.Settings.Default.StartOnJoin;
+            checkBoxSplitOnCredits.Checked = Properties.Settings.Default.SplitOnCredits;
+
             labelVersion.Text = $"Version {Assembly.GetExecutingAssembly().GetName().Version} by Jorkoh";
         }
 
@@ -73,6 +81,26 @@ namespace LiveSplit.Minecraft
         private void CheckBoxAutosplitterEnabled_CheckedChanged(object sender, EventArgs e)
         {
             Properties.Settings.Default.AutosplitterEnabled = checkBoxAutosplitterEnabled.Checked;
+            Properties.Settings.Default.Save();
+
+            grpBoxAutsplitterSettings.Enabled = Properties.Settings.Default.AutosplitterEnabled;
+        }
+
+        private void CheckBoxResetOnCreation_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.ResetOnCreation = checkBoxResetOnCreation.Checked;
+            Properties.Settings.Default.Save();
+        }
+
+        private void CheckBoxStartOnJoin_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.StartOnJoin = checkBoxStartOnJoin.Checked;
+            Properties.Settings.Default.Save();
+        }
+
+        private void CheckBoxSplitOnCredits_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.SplitOnCredits = checkBoxSplitOnCredits.Checked;
             Properties.Settings.Default.Save();
         }
     }

@@ -119,15 +119,15 @@
   </resheader>
   <data name="labelFAQ.Text" xml:space="preserve">
     <value>• How do I show IGT?
-Edit layout &gt; Add timer &gt; Set Timing Method to Game Time on the new timer
+Right click on LiveSplit &gt; Edit layout &gt; Add a new timer &gt; Set "Timing Method" to "Game Time" on the new timer.
 
 • IGT doesn't update until I pause!
-IGT is extracted from level.dat and Minecraft only updates the value on certain situations. I'm working on solutions to this issue.
+The standard method of extracting IGT is to read the stats file of the save. Unfortunately Minecraft only updates this file when the game is saved. Enable "Autosplitter and Live IGT" to see the IGT at all times.
 
 • IGT doesn't work!
-Make sure that the saves locations is correct, specially if you are using a non-default launcher.
+Make sure that the saves location is correct, specially if you are using a non-default launcher.
 
 • It doesn't autosplit!
-This is not an autosplitter, you have to manually start and stop the timer. This tool only provides IGT. I'm working on an autosplitter but it's not ready yet.</value>
+If you have enabled the autosplitter and it's not working make sure that ????????????????????????????</value>
   </data>
 </root>

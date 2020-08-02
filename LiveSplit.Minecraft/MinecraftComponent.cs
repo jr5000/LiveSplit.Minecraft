@@ -23,7 +23,6 @@ namespace LiveSplit.Minecraft
         public readonly MinecraftSettings settings;
 
         // Limit the rate at which some operations are done since they are too expensive to run on every udpate()
-        private DateTime nextHookCheck;
         private DateTime nextIGTCheck;
 
         // Unused for now
@@ -136,25 +135,22 @@ namespace LiveSplit.Minecraft
             if (autosplitterEnabled == newAutosplitterEnabled) return;
 
             autosplitterEnabled = newAutosplitterEnabled;
+            timer.Reset();
 
             if (autosplitterEnabled)
             {
                 SetupAutosplitter();
             }
-            else
-            {
-                timer.Reset();
-            }
         }
 
         private void SetupAutosplitter()
         {
-            timer.Reset();
             timer.CurrentState.CurrentTimingMethod = TimingMethod.GameTime;
             autosplitter.Setup();
         }
 
-        public void Dispose() {
+        public void Dispose()
+        {
             autosplitter.Dispose();
         }
 
@@ -165,7 +161,7 @@ namespace LiveSplit.Minecraft
         // Unused since the settings are stored as .NET user settings
         public void SetSettings(XmlNode settings) { }
 
-        public string ComponentName => "Minecraft IGT";
+        public string ComponentName => "Minecraft Component";
 
         public IDictionary<string, Action> ContextMenuControls { get; }
 

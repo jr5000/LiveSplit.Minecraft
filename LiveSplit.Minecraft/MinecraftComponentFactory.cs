@@ -7,7 +7,7 @@ namespace LiveSplit.Minecraft
 {
     class MinecraftComponentFactory : IComponentFactory
     {
-        public string ComponentName => "Minecraft IGT";
+        public string ComponentName => "Minecraft Component";
 
         public string Description => "Minecraft In-Game Time by Jorkoh https://github.com/Jorkoh/LiveSplit.Minecraft";
 

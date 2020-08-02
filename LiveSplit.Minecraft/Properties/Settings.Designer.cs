@@ -58,5 +58,41 @@ namespace LiveSplit.Minecraft.Properties {
                 this["AutosplitterEnabled"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ResetOnCreation {
+            get {
+                return ((bool)(this["ResetOnCreation"]));
+            }
+            set {
+                this["ResetOnCreation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool StartOnJoin {
+            get {
+                return ((bool)(this["StartOnJoin"]));
+            }
+            set {
+                this["StartOnJoin"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool SplitOnCredits {
+            get {
+                return ((bool)(this["SplitOnCredits"]));
+            }
+            set {
+                this["SplitOnCredits"] = value;
+            }
+        }
     }
 }
