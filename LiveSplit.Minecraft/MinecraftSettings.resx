@@ -128,6 +128,6 @@ The standard method of extracting IGT is to read the stats file of the save. Unf
 Make sure that the saves location is correct, specially if you are using a non-default launcher.
 
 • It doesn't autosplit!
-If you have enabled the autosplitter and it's not working make sure that ????????????????????????????</value>
+Double check that you have enabled the autosplitter and that you are using a Minecraft version with Fabric modloader and the autosplitting mod.</value>
   </data>
 </root>

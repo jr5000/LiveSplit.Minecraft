@@ -2,11 +2,13 @@
 using System.Windows.Forms;
 using System.IO;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace LiveSplit.Minecraft
 {
     public partial class MinecraftSettings : UserControl
     {
+        //TODO add instructions link on form
         private readonly MinecraftComponent component;
 
         // No, I won't learn Windows Forms databinding
@@ -101,6 +103,11 @@ namespace LiveSplit.Minecraft
         {
             Properties.Settings.Default.SplitOnFirstNetherEntrance = checkBoxSplitOnFirstNetherEntrance.Checked;
             Properties.Settings.Default.Save();
+        }
+
+        private void linkMod_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://github.com/Jorkoh/LiveSplit.Minecraft.Mod/releases/latest");
         }
     }
 }

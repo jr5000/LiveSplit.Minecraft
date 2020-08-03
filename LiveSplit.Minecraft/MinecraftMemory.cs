@@ -1,13 +1,8 @@
 ﻿using LiveSplit.ComponentUtil;
-using LiveSplit.Model;
-using LiveSplit.UI.Components;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Diagnostics;
-using System.Drawing.Text;
 using System.Linq;
-using System.Security.Policy;
 using System.Windows.Forms;
 
 namespace LiveSplit.Minecraft

@@ -1,15 +1,11 @@
-﻿using fNbt;
-using LiveSplit.Model;
+﻿using LiveSplit.Model;
 using LiveSplit.UI;
-using LiveSplit.UI.Components;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -133,7 +129,14 @@ namespace LiveSplit.Minecraft
 
         private void OnStart(object sender, EventArgs e)
         {
-            FindLatestSaveLevelPath();
+            if (!autosplitterEnabled)
+            {
+                FindLatestSaveLevelPath();
+            }
+            else
+            {
+                autosplitter.OnRunStart();
+            }
         }
 
         private void OnSettingsChanged(object sender, PropertyChangedEventArgs e)

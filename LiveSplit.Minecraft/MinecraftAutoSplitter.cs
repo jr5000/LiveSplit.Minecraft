@@ -1,13 +1,6 @@
 ﻿using LiveSplit.Minecraft.Properties;
-using LiveSplit.Model;
-using Microsoft.Win32.SafeHandles;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipes;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -19,6 +12,8 @@ namespace LiveSplit.Minecraft
 
         private NamedPipeServerStream pipe;
         private StreamReader pipeReader;
+
+        private bool alreadyEnteredNether = false;
 
         public MinecraftAutosplitter(MinecraftComponent component)
         {
@@ -63,7 +58,7 @@ namespace LiveSplit.Minecraft
             }
 
             // TODO on the connect event it could send the tick count from memory as a temporal value to 
-            // write in memory so it doesn't show 0 when resetting mc in runs
+            // write in memory so it doesn't show 0 when resetting mc in runs until the world is loaded again
             switch (minecraftEvent)
             {
                 case MinecraftEvent.CREATE_WORLD:
@@ -87,17 +82,22 @@ namespace LiveSplit.Minecraft
                     }
                     break;
                 case MinecraftEvent.ENTER_NETHER:
-                    if (Settings.Default.SplitOnFirstNetherEntrance)
+                    if (Settings.Default.SplitOnFirstNetherEntrance && !alreadyEnteredNether)
                     {
-                        //TODO make this only split THE FIRST TIME
                         // Make sure to grab the latest igt before splitting
                         component.memory.Update();
                         component.timer.Split();
                     }
+                    alreadyEnteredNether = true;
                     break;
                 default:
                     break;
             }
+        }
+
+        public void OnRunStart()
+        {
+            alreadyEnteredNether = false;
         }
 
         public void Dispose()

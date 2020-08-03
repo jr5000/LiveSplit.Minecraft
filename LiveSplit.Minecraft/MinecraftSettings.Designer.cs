@@ -38,6 +38,7 @@
             this.labelVersion = new System.Windows.Forms.Label();
             this.grpBoxAutosplitterAndLiveIGT = new System.Windows.Forms.GroupBox();
             this.grpBoxAutsplitterSettings = new System.Windows.Forms.GroupBox();
+            this.checkBoxSplitOnFirstNetherEntrance = new System.Windows.Forms.CheckBox();
             this.checkBoxSplitOnCredits = new System.Windows.Forms.CheckBox();
             this.checkBoxStartOnJoin = new System.Windows.Forms.CheckBox();
             this.checkBoxResetOnCreation = new System.Windows.Forms.CheckBox();
@@ -46,7 +47,6 @@
             this.labelWarning = new System.Windows.Forms.Label();
             this.checkBoxAutosplitterEnabled = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.checkBoxSplitOnFirstNetherEntrance = new System.Windows.Forms.CheckBox();
             this.grpBoxFAQ.SuspendLayout();
             this.grpBoxAutosplitterAndLiveIGT.SuspendLayout();
             this.grpBoxAutsplitterSettings.SuspendLayout();
@@ -145,6 +145,17 @@
             this.grpBoxAutsplitterSettings.TabStop = false;
             this.grpBoxAutsplitterSettings.Text = "Autsplitter settings";
             // 
+            // checkBoxSplitOnFirstNetherEntrance
+            // 
+            this.checkBoxSplitOnFirstNetherEntrance.AutoSize = true;
+            this.checkBoxSplitOnFirstNetherEntrance.Location = new System.Drawing.Point(11, 89);
+            this.checkBoxSplitOnFirstNetherEntrance.Name = "checkBoxSplitOnFirstNetherEntrance";
+            this.checkBoxSplitOnFirstNetherEntrance.Size = new System.Drawing.Size(168, 17);
+            this.checkBoxSplitOnFirstNetherEntrance.TabIndex = 14;
+            this.checkBoxSplitOnFirstNetherEntrance.Text = "SPLIT on first nether entrance";
+            this.checkBoxSplitOnFirstNetherEntrance.UseVisualStyleBackColor = true;
+            this.checkBoxSplitOnFirstNetherEntrance.CheckedChanged += new System.EventHandler(this.CheckBoxSplitOnFirstNetherEntrance_CheckedChanged);
+            // 
             // checkBoxSplitOnCredits
             // 
             this.checkBoxSplitOnCredits.AutoSize = true;
@@ -197,6 +208,7 @@
             this.linkMod.TabIndex = 9;
             this.linkMod.TabStop = true;
             this.linkMod.Text = "LINK TO MOD";
+            this.linkMod.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkMod_LinkClicked);
             // 
             // labelWarning
             // 
@@ -232,17 +244,6 @@
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Traditional IGT";
-            // 
-            // checkBoxSplitOnFirstNetherEntrance
-            // 
-            this.checkBoxSplitOnFirstNetherEntrance.AutoSize = true;
-            this.checkBoxSplitOnFirstNetherEntrance.Location = new System.Drawing.Point(11, 89);
-            this.checkBoxSplitOnFirstNetherEntrance.Name = "checkBoxSplitOnFirstNetherEntrance";
-            this.checkBoxSplitOnFirstNetherEntrance.Size = new System.Drawing.Size(168, 17);
-            this.checkBoxSplitOnFirstNetherEntrance.TabIndex = 14;
-            this.checkBoxSplitOnFirstNetherEntrance.Text = "SPLIT on first nether entrance";
-            this.checkBoxSplitOnFirstNetherEntrance.UseVisualStyleBackColor = true;
-            this.checkBoxSplitOnFirstNetherEntrance.CheckedChanged += new System.EventHandler(this.CheckBoxSplitOnFirstNetherEntrance_CheckedChanged);
             // 
             // MinecraftSettings
             // 
