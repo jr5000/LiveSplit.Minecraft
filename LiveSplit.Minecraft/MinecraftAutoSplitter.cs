@@ -56,7 +56,7 @@ namespace LiveSplit.Minecraft
             var minecraftEvent = pipeReader.ReadLine();
 
             // If we are not memory hooked we should probably try to do that asap
-            if (component.memory.MinecraftProcess == null && minecraftEvent != MinecraftEvent.DISCONNECT
+            if (component.memory.MinecraftProcess == null && minecraftEvent != null && minecraftEvent != MinecraftEvent.DISCONNECT
                 && (!component.memory.HookProcess() || !component.memory.FindRelevantMemoryAddress()))
             {
                 MessageBox.Show("ERROR CONNECTING TO MC");
@@ -89,6 +89,7 @@ namespace LiveSplit.Minecraft
                 case MinecraftEvent.ENTER_NETHER:
                     if (Settings.Default.SplitOnFirstNetherEntrance)
                     {
+                        //TODO make this only split THE FIRST TIME
                         // Make sure to grab the latest igt before splitting
                         component.memory.Update();
                         component.timer.Split();

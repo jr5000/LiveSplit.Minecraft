@@ -47,9 +47,18 @@ namespace LiveSplit.Minecraft
 
         public bool HookProcess()
         {
-            MinecraftProcess = Process.GetProcessesByName("javaw").FirstOrDefault();
+            var possibleProcess = Process.GetProcessesByName("javaw").FirstOrDefault();
 
-            return MinecraftProcess != null;
+            if (possibleProcess.HasExited)
+            {
+                possibleProcess.Dispose();
+                return false;
+            }
+            else
+            {
+                MinecraftProcess = possibleProcess;
+                return true;
+            }
         }
 
         // SCANNING STUFF
