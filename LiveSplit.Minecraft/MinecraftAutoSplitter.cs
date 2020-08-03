@@ -43,11 +43,12 @@ namespace LiveSplit.Minecraft
 
         static class MinecraftEvent
         {
-            public const string CONNECT = "CONNECT";
-            public const string DISCONNECT = "DISCONNECT";
-            public const string FIRST_TICK = "FIRST_TICK";
-            public const string CREATE_WORLD = "CREATE_WORLD";
-            public const string CREDITS_REACHED = "CREDITS_REACHED";
+            public const string CONNECT = "EVENT CONNECT";
+            public const string DISCONNECT = "EVENT DISCONNECT";
+            public const string FIRST_TICK = "EVENT FIRST_TICK";
+            public const string CREATE_WORLD = "EVENT CREATE_WORLD";
+            public const string CREDITS_REACHED = "EVENT CREDITS_REACHED";
+            public const string ENTER_NETHER = "EVENT ENTER_NETHER";
         }
 
         private void HandleMinecraftEvent()
@@ -61,6 +62,8 @@ namespace LiveSplit.Minecraft
                 MessageBox.Show("ERROR CONNECTING TO MC");
             }
 
+            // TODO on the connect event it could send the tick count from memory as a temporal value to 
+            // write in memory so it doesn't show 0 when resetting mc in runs
             switch (minecraftEvent)
             {
                 case MinecraftEvent.CREATE_WORLD:
@@ -77,6 +80,14 @@ namespace LiveSplit.Minecraft
                     break;
                 case MinecraftEvent.CREDITS_REACHED:
                     if (Settings.Default.SplitOnCredits)
+                    {
+                        // Make sure to grab the latest igt before splitting
+                        component.memory.Update();
+                        component.timer.Split();
+                    }
+                    break;
+                case MinecraftEvent.ENTER_NETHER:
+                    if (Settings.Default.SplitOnFirstNetherEntrance)
                     {
                         // Make sure to grab the latest igt before splitting
                         component.memory.Update();

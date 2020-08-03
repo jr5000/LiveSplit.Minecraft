@@ -94,5 +94,17 @@ namespace LiveSplit.Minecraft.Properties {
                 this["SplitOnCredits"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SplitOnFirstNetherEntrance {
+            get {
+                return ((bool)(this["SplitOnFirstNetherEntrance"]));
+            }
+            set {
+                this["SplitOnFirstNetherEntrance"] = value;
+            }
+        }
     }
 }

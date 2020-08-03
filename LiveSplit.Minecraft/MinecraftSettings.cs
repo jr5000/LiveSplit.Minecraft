@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using LiveSplit.Model;
 using System.IO;
 using System.Reflection;
 
@@ -53,6 +45,7 @@ namespace LiveSplit.Minecraft
             checkBoxResetOnCreation.Checked = Properties.Settings.Default.ResetOnCreation;
             checkBoxStartOnJoin.Checked = Properties.Settings.Default.StartOnJoin;
             checkBoxSplitOnCredits.Checked = Properties.Settings.Default.SplitOnCredits;
+            checkBoxSplitOnFirstNetherEntrance.Checked = Properties.Settings.Default.SplitOnFirstNetherEntrance;
 
             labelVersion.Text = $"Version {Assembly.GetExecutingAssembly().GetName().Version} by Jorkoh";
         }
@@ -101,6 +94,12 @@ namespace LiveSplit.Minecraft
         private void CheckBoxSplitOnCredits_CheckedChanged(object sender, EventArgs e)
         {
             Properties.Settings.Default.SplitOnCredits = checkBoxSplitOnCredits.Checked;
+            Properties.Settings.Default.Save();
+        }
+
+        private void CheckBoxSplitOnFirstNetherEntrance_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.SplitOnFirstNetherEntrance = checkBoxSplitOnFirstNetherEntrance.Checked;
             Properties.Settings.Default.Save();
         }
     }

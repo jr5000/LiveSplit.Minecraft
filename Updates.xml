@@ -1,4 +1,29 @@
 ﻿<updates>
+	<update version="1.0.3">
+		<files>
+			<file path="Components/LiveSplit.Minecraft.dll" status="changed"/>
+		</files>
+		<changelog>
+			<change>Added experimental autosplitting and live IGT system.</change>
+		</changelog>
+	</update>
+	<update version="1.0.2">
+		<files>
+			<file path="Components/LiveSplit.Minecraft.dll" status="changed"/>
+		</files>
+		<changelog>
+			<change>Fixed the auto-update system.</change>
+		</changelog>
+	</update>
+	<update version="1.0.1">
+		<files>
+			<file path="Components/LiveSplit.Minecraft.dll" status="changed"/>
+			<file path="Components/fNbt.dll" status="changed"/>
+		</files>
+		<changelog>
+			<change>IGT is now obtained from stats.json instead of level.dat for consistency with other timers.</change>
+		</changelog>
+	</update>
 	<update version="1.0.0">
 		<files>
 			<file path="Components/LiveSplit.Minecraft.dll" status="changed"/>

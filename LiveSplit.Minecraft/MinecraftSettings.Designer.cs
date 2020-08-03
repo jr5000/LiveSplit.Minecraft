@@ -46,6 +46,7 @@
             this.labelWarning = new System.Windows.Forms.Label();
             this.checkBoxAutosplitterEnabled = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBoxSplitOnFirstNetherEntrance = new System.Windows.Forms.CheckBox();
             this.grpBoxFAQ.SuspendLayout();
             this.grpBoxAutosplitterAndLiveIGT.SuspendLayout();
             this.grpBoxAutsplitterSettings.SuspendLayout();
@@ -92,7 +93,7 @@
             // grpBoxFAQ
             // 
             this.grpBoxFAQ.Controls.Add(this.labelFAQ);
-            this.grpBoxFAQ.Location = new System.Drawing.Point(6, 269);
+            this.grpBoxFAQ.Location = new System.Drawing.Point(6, 279);
             this.grpBoxFAQ.Name = "grpBoxFAQ";
             this.grpBoxFAQ.Size = new System.Drawing.Size(423, 246);
             this.grpBoxFAQ.TabIndex = 5;
@@ -126,19 +127,20 @@
             this.grpBoxAutosplitterAndLiveIGT.Controls.Add(this.checkBoxAutosplitterEnabled);
             this.grpBoxAutosplitterAndLiveIGT.Location = new System.Drawing.Point(6, 109);
             this.grpBoxAutosplitterAndLiveIGT.Name = "grpBoxAutosplitterAndLiveIGT";
-            this.grpBoxAutosplitterAndLiveIGT.Size = new System.Drawing.Size(423, 154);
+            this.grpBoxAutosplitterAndLiveIGT.Size = new System.Drawing.Size(423, 164);
             this.grpBoxAutosplitterAndLiveIGT.TabIndex = 7;
             this.grpBoxAutosplitterAndLiveIGT.TabStop = false;
             this.grpBoxAutosplitterAndLiveIGT.Text = "Autosplitter and Live IGT (experimental)";
             // 
             // grpBoxAutsplitterSettings
             // 
+            this.grpBoxAutsplitterSettings.Controls.Add(this.checkBoxSplitOnFirstNetherEntrance);
             this.grpBoxAutsplitterSettings.Controls.Add(this.checkBoxSplitOnCredits);
             this.grpBoxAutsplitterSettings.Controls.Add(this.checkBoxStartOnJoin);
             this.grpBoxAutsplitterSettings.Controls.Add(this.checkBoxResetOnCreation);
             this.grpBoxAutsplitterSettings.Location = new System.Drawing.Point(195, 45);
             this.grpBoxAutsplitterSettings.Name = "grpBoxAutsplitterSettings";
-            this.grpBoxAutsplitterSettings.Size = new System.Drawing.Size(222, 103);
+            this.grpBoxAutsplitterSettings.Size = new System.Drawing.Size(222, 113);
             this.grpBoxAutsplitterSettings.TabIndex = 12;
             this.grpBoxAutsplitterSettings.TabStop = false;
             this.grpBoxAutsplitterSettings.Text = "Autsplitter settings";
@@ -146,7 +148,7 @@
             // checkBoxSplitOnCredits
             // 
             this.checkBoxSplitOnCredits.AutoSize = true;
-            this.checkBoxSplitOnCredits.Location = new System.Drawing.Point(11, 71);
+            this.checkBoxSplitOnCredits.Location = new System.Drawing.Point(11, 66);
             this.checkBoxSplitOnCredits.Name = "checkBoxSplitOnCredits";
             this.checkBoxSplitOnCredits.Size = new System.Drawing.Size(105, 17);
             this.checkBoxSplitOnCredits.TabIndex = 13;
@@ -157,7 +159,7 @@
             // checkBoxStartOnJoin
             // 
             this.checkBoxStartOnJoin.AutoSize = true;
-            this.checkBoxStartOnJoin.Location = new System.Drawing.Point(11, 48);
+            this.checkBoxStartOnJoin.Location = new System.Drawing.Point(11, 43);
             this.checkBoxStartOnJoin.Name = "checkBoxStartOnJoin";
             this.checkBoxStartOnJoin.Size = new System.Drawing.Size(124, 17);
             this.checkBoxStartOnJoin.TabIndex = 12;
@@ -165,11 +167,11 @@
             this.checkBoxStartOnJoin.UseVisualStyleBackColor = true;
             this.checkBoxStartOnJoin.CheckedChanged += new System.EventHandler(this.CheckBoxStartOnJoin_CheckedChanged);
             // 
-            // checkBoxRestartOnCreation
+            // checkBoxResetOnCreation
             // 
             this.checkBoxResetOnCreation.AutoSize = true;
-            this.checkBoxResetOnCreation.Location = new System.Drawing.Point(11, 25);
-            this.checkBoxResetOnCreation.Name = "checkBoxRestartOnCreation";
+            this.checkBoxResetOnCreation.Location = new System.Drawing.Point(11, 20);
+            this.checkBoxResetOnCreation.Name = "checkBoxResetOnCreation";
             this.checkBoxResetOnCreation.Size = new System.Drawing.Size(146, 17);
             this.checkBoxResetOnCreation.TabIndex = 11;
             this.checkBoxResetOnCreation.Text = "RESET on world creation";
@@ -201,7 +203,7 @@
             this.labelWarning.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelWarning.AutoSize = true;
             this.labelWarning.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelWarning.Location = new System.Drawing.Point(7, 23);
+            this.labelWarning.Location = new System.Drawing.Point(7, 22);
             this.labelWarning.Name = "labelWarning";
             this.labelWarning.Size = new System.Drawing.Size(336, 13);
             this.labelWarning.TabIndex = 8;
@@ -230,6 +232,17 @@
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Traditional IGT";
+            // 
+            // checkBoxSplitOnFirstNetherEntrance
+            // 
+            this.checkBoxSplitOnFirstNetherEntrance.AutoSize = true;
+            this.checkBoxSplitOnFirstNetherEntrance.Location = new System.Drawing.Point(11, 89);
+            this.checkBoxSplitOnFirstNetherEntrance.Name = "checkBoxSplitOnFirstNetherEntrance";
+            this.checkBoxSplitOnFirstNetherEntrance.Size = new System.Drawing.Size(168, 17);
+            this.checkBoxSplitOnFirstNetherEntrance.TabIndex = 14;
+            this.checkBoxSplitOnFirstNetherEntrance.Text = "SPLIT on first nether entrance";
+            this.checkBoxSplitOnFirstNetherEntrance.UseVisualStyleBackColor = true;
+            this.checkBoxSplitOnFirstNetherEntrance.CheckedChanged += new System.EventHandler(this.CheckBoxSplitOnFirstNetherEntrance_CheckedChanged);
             // 
             // MinecraftSettings
             // 
@@ -272,5 +285,6 @@
         private System.Windows.Forms.LinkLabel linkMod;
         private System.Windows.Forms.Label labelWarning;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.CheckBox checkBoxSplitOnFirstNetherEntrance;
     }
 }
