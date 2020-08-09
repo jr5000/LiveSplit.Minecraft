@@ -37,11 +37,7 @@
             this.labelFAQ = new System.Windows.Forms.Label();
             this.labelVersion = new System.Windows.Forms.Label();
             this.grpBoxAutosplitterAndLiveIGT = new System.Windows.Forms.GroupBox();
-            this.grpBoxAutsplitterSettings = new System.Windows.Forms.GroupBox();
-            this.checkBoxSplitOnFirstNetherEntrance = new System.Windows.Forms.CheckBox();
-            this.checkBoxSplitOnCredits = new System.Windows.Forms.CheckBox();
-            this.checkBoxStartOnJoin = new System.Windows.Forms.CheckBox();
-            this.checkBoxResetOnCreation = new System.Windows.Forms.CheckBox();
+            this.btnConfigureAutosplitterSettings = new System.Windows.Forms.Button();
             this.linkInstructions = new System.Windows.Forms.LinkLabel();
             this.linkMod = new System.Windows.Forms.LinkLabel();
             this.labelWarning = new System.Windows.Forms.Label();
@@ -49,7 +45,6 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.grpBoxFAQ.SuspendLayout();
             this.grpBoxAutosplitterAndLiveIGT.SuspendLayout();
-            this.grpBoxAutsplitterSettings.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -93,9 +88,9 @@
             // grpBoxFAQ
             // 
             this.grpBoxFAQ.Controls.Add(this.labelFAQ);
-            this.grpBoxFAQ.Location = new System.Drawing.Point(6, 279);
+            this.grpBoxFAQ.Location = new System.Drawing.Point(6, 254);
             this.grpBoxFAQ.Name = "grpBoxFAQ";
-            this.grpBoxFAQ.Size = new System.Drawing.Size(423, 246);
+            this.grpBoxFAQ.Size = new System.Drawing.Size(419, 246);
             this.grpBoxFAQ.TabIndex = 5;
             this.grpBoxFAQ.TabStop = false;
             this.grpBoxFAQ.Text = "F.A.Q.";
@@ -104,7 +99,7 @@
             // 
             this.labelFAQ.Location = new System.Drawing.Point(7, 20);
             this.labelFAQ.Name = "labelFAQ";
-            this.labelFAQ.Size = new System.Drawing.Size(410, 223);
+            this.labelFAQ.Size = new System.Drawing.Size(406, 223);
             this.labelFAQ.TabIndex = 0;
             this.labelFAQ.Text = resources.GetString("labelFAQ.Text");
             // 
@@ -120,79 +115,32 @@
             // 
             // grpBoxAutosplitterAndLiveIGT
             // 
-            this.grpBoxAutosplitterAndLiveIGT.Controls.Add(this.grpBoxAutsplitterSettings);
+            this.grpBoxAutosplitterAndLiveIGT.Controls.Add(this.btnConfigureAutosplitterSettings);
             this.grpBoxAutosplitterAndLiveIGT.Controls.Add(this.linkInstructions);
             this.grpBoxAutosplitterAndLiveIGT.Controls.Add(this.linkMod);
             this.grpBoxAutosplitterAndLiveIGT.Controls.Add(this.labelWarning);
             this.grpBoxAutosplitterAndLiveIGT.Controls.Add(this.checkBoxAutosplitterEnabled);
-            this.grpBoxAutosplitterAndLiveIGT.Location = new System.Drawing.Point(6, 109);
+            this.grpBoxAutosplitterAndLiveIGT.Location = new System.Drawing.Point(6, 122);
             this.grpBoxAutosplitterAndLiveIGT.Name = "grpBoxAutosplitterAndLiveIGT";
-            this.grpBoxAutosplitterAndLiveIGT.Size = new System.Drawing.Size(423, 164);
+            this.grpBoxAutosplitterAndLiveIGT.Size = new System.Drawing.Size(419, 113);
             this.grpBoxAutosplitterAndLiveIGT.TabIndex = 7;
             this.grpBoxAutosplitterAndLiveIGT.TabStop = false;
             this.grpBoxAutosplitterAndLiveIGT.Text = "Autosplitter and Live IGT (experimental)";
             // 
-            // grpBoxAutsplitterSettings
+            // btnConfigureAutosplitterSettings
             // 
-            this.grpBoxAutsplitterSettings.Controls.Add(this.checkBoxSplitOnFirstNetherEntrance);
-            this.grpBoxAutsplitterSettings.Controls.Add(this.checkBoxSplitOnCredits);
-            this.grpBoxAutsplitterSettings.Controls.Add(this.checkBoxStartOnJoin);
-            this.grpBoxAutsplitterSettings.Controls.Add(this.checkBoxResetOnCreation);
-            this.grpBoxAutsplitterSettings.Location = new System.Drawing.Point(195, 45);
-            this.grpBoxAutsplitterSettings.Name = "grpBoxAutsplitterSettings";
-            this.grpBoxAutsplitterSettings.Size = new System.Drawing.Size(222, 113);
-            this.grpBoxAutsplitterSettings.TabIndex = 12;
-            this.grpBoxAutsplitterSettings.TabStop = false;
-            this.grpBoxAutsplitterSettings.Text = "Autsplitter settings";
-            // 
-            // checkBoxSplitOnFirstNetherEntrance
-            // 
-            this.checkBoxSplitOnFirstNetherEntrance.AutoSize = true;
-            this.checkBoxSplitOnFirstNetherEntrance.Location = new System.Drawing.Point(11, 89);
-            this.checkBoxSplitOnFirstNetherEntrance.Name = "checkBoxSplitOnFirstNetherEntrance";
-            this.checkBoxSplitOnFirstNetherEntrance.Size = new System.Drawing.Size(168, 17);
-            this.checkBoxSplitOnFirstNetherEntrance.TabIndex = 14;
-            this.checkBoxSplitOnFirstNetherEntrance.Text = "SPLIT on first nether entrance";
-            this.checkBoxSplitOnFirstNetherEntrance.UseVisualStyleBackColor = true;
-            this.checkBoxSplitOnFirstNetherEntrance.CheckedChanged += new System.EventHandler(this.CheckBoxSplitOnFirstNetherEntrance_CheckedChanged);
-            // 
-            // checkBoxSplitOnCredits
-            // 
-            this.checkBoxSplitOnCredits.AutoSize = true;
-            this.checkBoxSplitOnCredits.Location = new System.Drawing.Point(11, 66);
-            this.checkBoxSplitOnCredits.Name = "checkBoxSplitOnCredits";
-            this.checkBoxSplitOnCredits.Size = new System.Drawing.Size(105, 17);
-            this.checkBoxSplitOnCredits.TabIndex = 13;
-            this.checkBoxSplitOnCredits.Text = "SPLIT on credits";
-            this.checkBoxSplitOnCredits.UseVisualStyleBackColor = true;
-            this.checkBoxSplitOnCredits.CheckedChanged += new System.EventHandler(this.CheckBoxSplitOnCredits_CheckedChanged);
-            // 
-            // checkBoxStartOnJoin
-            // 
-            this.checkBoxStartOnJoin.AutoSize = true;
-            this.checkBoxStartOnJoin.Location = new System.Drawing.Point(11, 43);
-            this.checkBoxStartOnJoin.Name = "checkBoxStartOnJoin";
-            this.checkBoxStartOnJoin.Size = new System.Drawing.Size(124, 17);
-            this.checkBoxStartOnJoin.TabIndex = 12;
-            this.checkBoxStartOnJoin.Text = "START on world join";
-            this.checkBoxStartOnJoin.UseVisualStyleBackColor = true;
-            this.checkBoxStartOnJoin.CheckedChanged += new System.EventHandler(this.CheckBoxStartOnJoin_CheckedChanged);
-            // 
-            // checkBoxResetOnCreation
-            // 
-            this.checkBoxResetOnCreation.AutoSize = true;
-            this.checkBoxResetOnCreation.Location = new System.Drawing.Point(11, 20);
-            this.checkBoxResetOnCreation.Name = "checkBoxResetOnCreation";
-            this.checkBoxResetOnCreation.Size = new System.Drawing.Size(146, 17);
-            this.checkBoxResetOnCreation.TabIndex = 11;
-            this.checkBoxResetOnCreation.Text = "RESET on world creation";
-            this.checkBoxResetOnCreation.UseVisualStyleBackColor = true;
-            this.checkBoxResetOnCreation.CheckedChanged += new System.EventHandler(this.CheckBoxResetOnCreation_CheckedChanged);
+            this.btnConfigureAutosplitterSettings.Location = new System.Drawing.Point(10, 70);
+            this.btnConfigureAutosplitterSettings.Name = "btnConfigureAutosplitterSettings";
+            this.btnConfigureAutosplitterSettings.Size = new System.Drawing.Size(182, 23);
+            this.btnConfigureAutosplitterSettings.TabIndex = 15;
+            this.btnConfigureAutosplitterSettings.Text = "Configure Autosplitter Settings";
+            this.btnConfigureAutosplitterSettings.UseVisualStyleBackColor = true;
+            this.btnConfigureAutosplitterSettings.Click += new System.EventHandler(this.BtnConfigureAutosplitterSettings_Click);
             // 
             // linkInstructions
             // 
             this.linkInstructions.AutoSize = true;
-            this.linkInstructions.Location = new System.Drawing.Point(7, 112);
+            this.linkInstructions.Location = new System.Drawing.Point(248, 78);
             this.linkInstructions.Name = "linkInstructions";
             this.linkInstructions.Size = new System.Drawing.Size(124, 13);
             this.linkInstructions.TabIndex = 10;
@@ -202,20 +150,19 @@
             // linkMod
             // 
             this.linkMod.AutoSize = true;
-            this.linkMod.Location = new System.Drawing.Point(7, 82);
+            this.linkMod.Location = new System.Drawing.Point(248, 49);
             this.linkMod.Name = "linkMod";
             this.linkMod.Size = new System.Drawing.Size(77, 13);
             this.linkMod.TabIndex = 9;
             this.linkMod.TabStop = true;
             this.linkMod.Text = "LINK TO MOD";
-            this.linkMod.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkMod_LinkClicked);
+            this.linkMod.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkMod_LinkClicked);
             // 
             // labelWarning
             // 
-            this.labelWarning.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelWarning.AutoSize = true;
             this.labelWarning.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelWarning.Location = new System.Drawing.Point(7, 22);
+            this.labelWarning.Location = new System.Drawing.Point(6, 22);
             this.labelWarning.Name = "labelWarning";
             this.labelWarning.Size = new System.Drawing.Size(336, 13);
             this.labelWarning.TabIndex = 8;
@@ -240,7 +187,7 @@
             this.groupBox1.Controls.Add(this.btnResetSavesPath);
             this.groupBox1.Location = new System.Drawing.Point(6, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(423, 100);
+            this.groupBox1.Size = new System.Drawing.Size(419, 100);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Traditional IGT";
@@ -259,8 +206,6 @@
             this.grpBoxFAQ.ResumeLayout(false);
             this.grpBoxAutosplitterAndLiveIGT.ResumeLayout(false);
             this.grpBoxAutosplitterAndLiveIGT.PerformLayout();
-            this.grpBoxAutsplitterSettings.ResumeLayout(false);
-            this.grpBoxAutsplitterSettings.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
@@ -278,14 +223,10 @@
         private System.Windows.Forms.Label labelVersion;
         private System.Windows.Forms.GroupBox grpBoxAutosplitterAndLiveIGT;
         private System.Windows.Forms.CheckBox checkBoxAutosplitterEnabled;
-        private System.Windows.Forms.GroupBox grpBoxAutsplitterSettings;
-        private System.Windows.Forms.CheckBox checkBoxSplitOnCredits;
-        private System.Windows.Forms.CheckBox checkBoxStartOnJoin;
-        private System.Windows.Forms.CheckBox checkBoxResetOnCreation;
         private System.Windows.Forms.LinkLabel linkInstructions;
         private System.Windows.Forms.LinkLabel linkMod;
         private System.Windows.Forms.Label labelWarning;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.CheckBox checkBoxSplitOnFirstNetherEntrance;
+        private System.Windows.Forms.Button btnConfigureAutosplitterSettings;
     }
 }

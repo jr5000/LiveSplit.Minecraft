@@ -44,6 +44,8 @@ namespace LiveSplit.Minecraft
         {
             var possibleProcess = Process.GetProcessesByName("javaw").FirstOrDefault();
 
+            if (possibleProcess == null) return false;
+
             if (possibleProcess.HasExited)
             {
                 possibleProcess.Dispose();

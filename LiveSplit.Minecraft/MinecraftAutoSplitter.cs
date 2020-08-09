@@ -1,6 +1,8 @@
 ﻿using LiveSplit.Minecraft.Properties;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipes;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -13,7 +15,7 @@ namespace LiveSplit.Minecraft
         private NamedPipeServerStream pipe;
         private StreamReader pipeReader;
 
-        private bool alreadyEnteredNether = false;
+        private List<string> AdvancementList;
 
         public MinecraftAutosplitter(MinecraftComponent component)
         {
@@ -22,7 +24,8 @@ namespace LiveSplit.Minecraft
 
         public void Setup()
         {
-            pipe = new NamedPipeServerStream("LiveSplit.Minecraft", PipeDirection.InOut, -1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
+            SetupAdvancements();
+            pipe = new NamedPipeServerStream("LiveSplit.Minecraft", PipeDirection.InOut, -1, PipeTransmissionMode.Byte, PipeOptions.None);
             Task.Factory.StartNew(() =>
             {
                 pipe.WaitForConnection();
@@ -31,27 +34,42 @@ namespace LiveSplit.Minecraft
                 {
                     HandleMinecraftEvent();
                 }
+                pipe.Disconnect();
+                pipe.Dispose();
                 // TODO figure out a way to reuse the pipe, currently it breaks when MC closes and has to be recreated
                 Setup();
             });
         }
 
+        public void SetupAdvancements()
+        {
+            AdvancementList = Settings.Default.Advancements.OfType<string>()
+                        .Where(x => x.Split(':')[0] == "True")
+                        .Select(x => x.Substring(x.IndexOf(':') + 1))
+                        .ToList();
+        }
+
         static class MinecraftEvent
         {
-            public const string CONNECT = "EVENT CONNECT";
-            public const string DISCONNECT = "EVENT DISCONNECT";
-            public const string FIRST_TICK = "EVENT FIRST_TICK";
-            public const string CREATE_WORLD = "EVENT CREATE_WORLD";
-            public const string CREDITS_REACHED = "EVENT CREDITS_REACHED";
-            public const string ENTER_NETHER = "EVENT ENTER_NETHER";
+            public const string CONNECT = "CONNECT";
+            public const string DISCONNECT = "DISCONNECT";
+            public const string FIRST_TICK = "FIRST_TICK";
+            public const string CREATE_WORLD = "CREATE_WORLD";
+            public const string CREDITS_REACHED = "CREDITS_REACHED";
+            public const string ADVANCEMENT_DONE = "ADVANCEMENT_DONE";
         }
 
         private void HandleMinecraftEvent()
         {
-            var minecraftEvent = pipeReader.ReadLine();
+            var line = pipeReader.ReadLine();
+
+            // If the read line is not a valid event pass
+            if (line == null || !line.StartsWith("EVENT")) return;
+
+            var eventArgs = line.Split(' ');
 
             // If we are not memory hooked we should probably try to do that asap
-            if (component.memory.MinecraftProcess == null && minecraftEvent != null && minecraftEvent != MinecraftEvent.DISCONNECT
+            if (component.memory.MinecraftProcess == null && eventArgs[1] != MinecraftEvent.DISCONNECT
                 && (!component.memory.HookProcess() || !component.memory.FindRelevantMemoryAddress()))
             {
                 MessageBox.Show("ERROR CONNECTING TO MC");
@@ -59,7 +77,7 @@ namespace LiveSplit.Minecraft
 
             // TODO on the connect event it could send the tick count from memory as a temporal value to 
             // write in memory so it doesn't show 0 when resetting mc in runs until the world is loaded again
-            switch (minecraftEvent)
+            switch (eventArgs[1])
             {
                 case MinecraftEvent.CREATE_WORLD:
                     if (Settings.Default.ResetOnCreation)
@@ -81,23 +99,17 @@ namespace LiveSplit.Minecraft
                         component.timer.Split();
                     }
                     break;
-                case MinecraftEvent.ENTER_NETHER:
-                    if (Settings.Default.SplitOnFirstNetherEntrance && !alreadyEnteredNether)
+                case MinecraftEvent.ADVANCEMENT_DONE:
+                    if (AdvancementList.Contains(eventArgs[2]))
                     {
                         // Make sure to grab the latest igt before splitting
                         component.memory.Update();
                         component.timer.Split();
                     }
-                    alreadyEnteredNether = true;
                     break;
                 default:
                     break;
             }
-        }
-
-        public void OnRunStart()
-        {
-            alreadyEnteredNether = false;
         }
 
         public void Dispose()

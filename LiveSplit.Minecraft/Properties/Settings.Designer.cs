@@ -97,13 +97,23 @@ namespace LiveSplit.Minecraft.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool SplitOnFirstNetherEntrance {
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <string>False:minecraft:nether/root</string>
+  <string>False:minecraft:nether/find_fortress</string>
+  <string>False:minecraft:nether/distract_piglin</string>
+  <string>False:minecraft:nether/obtain_blaze_rod</string>
+  <string>False:minecraft:story/follow_ender_eye</string>
+  <string>False:minecraft:end/root</string>
+  <string>False:minecraft:story/mine_diamond</string>
+  <string>False:minecraft:adventure/arbalistic</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection Advancements {
             get {
-                return ((bool)(this["SplitOnFirstNetherEntrance"]));
+                return ((global::System.Collections.Specialized.StringCollection)(this["Advancements"]));
             }
             set {
-                this["SplitOnFirstNetherEntrance"] = value;
+                this["Advancements"] = value;
             }
         }
     }

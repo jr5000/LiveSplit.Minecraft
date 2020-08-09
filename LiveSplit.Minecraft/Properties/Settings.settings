@@ -20,8 +20,18 @@
     <Setting Name="SplitOnCredits" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="SplitOnFirstNetherEntrance" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+    <Setting Name="Advancements" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;False:minecraft:nether/root&lt;/string&gt;
+  &lt;string&gt;False:minecraft:nether/find_fortress&lt;/string&gt;
+  &lt;string&gt;False:minecraft:nether/distract_piglin&lt;/string&gt;
+  &lt;string&gt;False:minecraft:nether/obtain_blaze_rod&lt;/string&gt;
+  &lt;string&gt;False:minecraft:story/follow_ender_eye&lt;/string&gt;
+  &lt;string&gt;False:minecraft:end/root&lt;/string&gt;
+  &lt;string&gt;False:minecraft:story/mine_diamond&lt;/string&gt;
+  &lt;string&gt;False:minecraft:adventure/arbalistic&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
     </Setting>
   </Settings>
 </SettingsFile>

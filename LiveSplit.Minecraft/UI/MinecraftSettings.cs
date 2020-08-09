@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Reflection;
 using System.Diagnostics;
+using LiveSplit.Minecraft.UI;
 
 namespace LiveSplit.Minecraft
 {
@@ -41,13 +42,7 @@ namespace LiveSplit.Minecraft
             txtBoxSavesPath.Text = Properties.Settings.Default.SavesPath;
 
             checkBoxAutosplitterEnabled.Checked = Properties.Settings.Default.AutosplitterEnabled;
-
-            grpBoxAutsplitterSettings.Enabled = Properties.Settings.Default.AutosplitterEnabled;
-
-            checkBoxResetOnCreation.Checked = Properties.Settings.Default.ResetOnCreation;
-            checkBoxStartOnJoin.Checked = Properties.Settings.Default.StartOnJoin;
-            checkBoxSplitOnCredits.Checked = Properties.Settings.Default.SplitOnCredits;
-            checkBoxSplitOnFirstNetherEntrance.Checked = Properties.Settings.Default.SplitOnFirstNetherEntrance;
+            btnConfigureAutosplitterSettings.Enabled = Properties.Settings.Default.AutosplitterEnabled;
 
             labelVersion.Text = $"Version {Assembly.GetExecutingAssembly().GetName().Version} by Jorkoh";
         }
@@ -75,39 +70,23 @@ namespace LiveSplit.Minecraft
 
         private void CheckBoxAutosplitterEnabled_CheckedChanged(object sender, EventArgs e)
         {
-            Properties.Settings.Default.AutosplitterEnabled = checkBoxAutosplitterEnabled.Checked;
-            Properties.Settings.Default.Save();
+            if (Properties.Settings.Default.AutosplitterEnabled != checkBoxAutosplitterEnabled.Checked)
+            {
+                Properties.Settings.Default.AutosplitterEnabled = checkBoxAutosplitterEnabled.Checked;
+                Properties.Settings.Default.Save();
 
-            grpBoxAutsplitterSettings.Enabled = Properties.Settings.Default.AutosplitterEnabled;
+                btnConfigureAutosplitterSettings.Enabled = Properties.Settings.Default.AutosplitterEnabled;
+            }
         }
 
-        private void CheckBoxResetOnCreation_CheckedChanged(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.ResetOnCreation = checkBoxResetOnCreation.Checked;
-            Properties.Settings.Default.Save();
-        }
-
-        private void CheckBoxStartOnJoin_CheckedChanged(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.StartOnJoin = checkBoxStartOnJoin.Checked;
-            Properties.Settings.Default.Save();
-        }
-
-        private void CheckBoxSplitOnCredits_CheckedChanged(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.SplitOnCredits = checkBoxSplitOnCredits.Checked;
-            Properties.Settings.Default.Save();
-        }
-
-        private void CheckBoxSplitOnFirstNetherEntrance_CheckedChanged(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.SplitOnFirstNetherEntrance = checkBoxSplitOnFirstNetherEntrance.Checked;
-            Properties.Settings.Default.Save();
-        }
-
-        private void linkMod_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LinkMod_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://github.com/Jorkoh/LiveSplit.Minecraft.Mod/releases/latest");
+        }
+
+        private void BtnConfigureAutosplitterSettings_Click(object sender, EventArgs e)
+        {
+            new MinecraftAutosplitterSettings(component).ShowDialog();
         }
     }
 }

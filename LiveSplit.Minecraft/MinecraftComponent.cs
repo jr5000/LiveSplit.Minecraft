@@ -11,7 +11,7 @@ using System.Xml;
 
 namespace LiveSplit.Minecraft
 {
-    public class MinecraftComponent : UI.Components.IComponent
+    public class MinecraftComponent : LiveSplit.UI.Components.IComponent
     {
         public readonly TimerModel timer;
         public readonly MinecraftMemory memory;
@@ -133,24 +133,26 @@ namespace LiveSplit.Minecraft
             {
                 FindLatestSaveLevelPath();
             }
-            else
-            {
-                autosplitter.OnRunStart();
-            }
         }
 
-        private void OnSettingsChanged(object sender, PropertyChangedEventArgs e)
+        public void OnSettingsChanged(object sender, PropertyChangedEventArgs e)
         {
-            var newAutosplitterEnabled = Properties.Settings.Default.AutosplitterEnabled;
-            // The change was another setting
-            if (autosplitterEnabled == newAutosplitterEnabled) return;
-
-            autosplitterEnabled = newAutosplitterEnabled;
-            timer.Reset();
-
-            if (autosplitterEnabled)
+            switch (e.PropertyName)
             {
-                SetupAutosplitter();
+                case "AutosplitterEnabled":
+                    autosplitterEnabled = Properties.Settings.Default.AutosplitterEnabled;
+                    timer.Reset();
+                    if (autosplitterEnabled)
+                    {
+                        SetupAutosplitter();
+                    }
+                    break;
+                case "Advancements":
+                    // Set the enabled advancements as the advancement list for the autosplitter
+                    autosplitter.SetupAdvancements();
+                    break;
+                default:
+                    break;
             }
         }
 
