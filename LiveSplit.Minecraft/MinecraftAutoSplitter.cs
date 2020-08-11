@@ -131,7 +131,6 @@ namespace LiveSplit.Minecraft
 
         public void Dispose()
         {
-            pipe?.Disconnect();
             pipe?.Dispose();
         }
     }
