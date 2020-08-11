@@ -26,7 +26,8 @@ namespace LiveSplit.Minecraft.UI
         private void MinecraftAutosplitterSettings_Load(object sender, EventArgs e)
         {
             checkBoxResetOnCreation.Checked = Settings.Default.ResetOnCreation;
-            checkBoxStartOnJoin.Checked = Settings.Default.StartOnJoin;
+            radioBtnStartOnJoin.Checked = Settings.Default.StartOnJoin;
+            radioBtnStartOnFirstInput.Checked = Settings.Default.StartOnFirstInput;
             checkBoxSplitOnCredits.Checked = Settings.Default.SplitOnCredits;
 
             foreach (var advancement in Settings.Default.Advancements)
@@ -37,20 +38,29 @@ namespace LiveSplit.Minecraft.UI
             dataGridAdvancements.ClearSelection();
         }
 
+        private void RadioBtnStartOnJoin_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Settings.Default.StartOnJoin != radioBtnStartOnJoin.Checked)
+            {
+                Settings.Default.StartOnJoin = radioBtnStartOnJoin.Checked;
+                Settings.Default.Save();
+            }
+        }
+
+        private void RadioBtnStartOnFirstInput_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Settings.Default.StartOnFirstInput != radioBtnStartOnFirstInput.Checked)
+            {
+                Settings.Default.StartOnFirstInput = radioBtnStartOnFirstInput.Checked;
+                Settings.Default.Save();
+            }
+        }
+
         private void CheckBoxResetOnCreation_CheckedChanged(object sender, EventArgs e)
         {
             if (Settings.Default.ResetOnCreation != checkBoxResetOnCreation.Checked)
             {
                 Settings.Default.ResetOnCreation = checkBoxResetOnCreation.Checked;
-                Settings.Default.Save();
-            }
-        }
-
-        private void CheckBoxStartOnJoin_CheckedChanged(object sender, EventArgs e)
-        {
-            if (Settings.Default.StartOnJoin != checkBoxStartOnJoin.Checked)
-            {
-                Settings.Default.StartOnJoin = checkBoxStartOnJoin.Checked;
                 Settings.Default.Save();
             }
         }
@@ -65,7 +75,7 @@ namespace LiveSplit.Minecraft.UI
         }
 
         // Advancements grid events
-        private void ButtonAddAdvancement_Click(object sender, EventArgs e)
+        private void BtnAddAdvancement_Click(object sender, EventArgs e)
         {
             var index = dataGridAdvancements.Rows.Add();
             dataGridAdvancements.Rows[index].Cells[0].Value = true;
@@ -75,7 +85,7 @@ namespace LiveSplit.Minecraft.UI
             dataGridAdvancements.BeginEdit(true);
         }
 
-        private void ButtonRemoveAdvancements_Click(object sender, EventArgs e)
+        private void BtnRemoveAdvancements_Click(object sender, EventArgs e)
         {
             foreach (DataGridViewRow row in dataGridAdvancements.SelectedRows)
             {

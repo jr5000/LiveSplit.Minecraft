@@ -50,12 +50,12 @@ namespace LiveSplit.Minecraft.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool AutosplitterEnabled {
+        public bool AdvancedFeaturesEnabled {
             get {
-                return ((bool)(this["AutosplitterEnabled"]));
+                return ((bool)(this["AdvancedFeaturesEnabled"]));
             }
             set {
-                this["AutosplitterEnabled"] = value;
+                this["AdvancedFeaturesEnabled"] = value;
             }
         }
         
@@ -92,6 +92,30 @@ namespace LiveSplit.Minecraft.Properties {
             }
             set {
                 this["SplitOnCredits"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool StartOnFirstInput {
+            get {
+                return ((bool)(this["StartOnFirstInput"]));
+            }
+            set {
+                this["StartOnFirstInput"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int TimingMethod {
+            get {
+                return ((int)(this["TimingMethod"]));
+            }
+            set {
+                this["TimingMethod"] = value;
             }
         }
         

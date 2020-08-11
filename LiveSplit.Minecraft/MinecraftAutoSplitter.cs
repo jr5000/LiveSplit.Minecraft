@@ -15,7 +15,7 @@ namespace LiveSplit.Minecraft
         private NamedPipeServerStream pipe;
         private StreamReader pipeReader;
 
-        private List<string> AdvancementList;
+        private HashSet<string> PendingAdvancements;
 
         public MinecraftAutosplitter(MinecraftComponent component)
         {
@@ -25,6 +25,11 @@ namespace LiveSplit.Minecraft
         public void Setup()
         {
             SetupAdvancements();
+            SetupPipe();
+        }
+
+        private void SetupPipe()
+        {
             pipe = new NamedPipeServerStream("LiveSplit.Minecraft", PipeDirection.InOut, -1, PipeTransmissionMode.Byte, PipeOptions.None);
             Task.Factory.StartNew(() =>
             {
@@ -37,23 +42,24 @@ namespace LiveSplit.Minecraft
                 pipe.Disconnect();
                 pipe.Dispose();
                 // TODO figure out a way to reuse the pipe, currently it breaks when MC closes and has to be recreated
-                Setup();
+                SetupPipe();
             });
         }
 
         public void SetupAdvancements()
         {
-            AdvancementList = Settings.Default.Advancements.OfType<string>()
+            PendingAdvancements = Settings.Default.Advancements.OfType<string>()
                         .Where(x => x.Split(':')[0] == "True")
                         .Select(x => x.Substring(x.IndexOf(':') + 1))
-                        .ToList();
+                        .ToHashSet();
         }
 
         static class MinecraftEvent
         {
             public const string CONNECT = "CONNECT";
             public const string DISCONNECT = "DISCONNECT";
-            public const string FIRST_TICK = "FIRST_TICK";
+            public const string START_PLAYING = "START_PLAYING";
+            public const string FIRST_INPUT = "FIRST_INPUT";
             public const string CREATE_WORLD = "CREATE_WORLD";
             public const string CREDITS_REACHED = "CREDITS_REACHED";
             public const string ADVANCEMENT_DONE = "ADVANCEMENT_DONE";
@@ -75,8 +81,6 @@ namespace LiveSplit.Minecraft
                 MessageBox.Show("ERROR CONNECTING TO MC");
             }
 
-            // TODO on the connect event it could send the tick count from memory as a temporal value to 
-            // write in memory so it doesn't show 0 when resetting mc in runs until the world is loaded again
             switch (eventArgs[1])
             {
                 case MinecraftEvent.CREATE_WORLD:
@@ -85,8 +89,14 @@ namespace LiveSplit.Minecraft
                         component.timer.Reset();
                     }
                     break;
-                case MinecraftEvent.FIRST_TICK:
+                case MinecraftEvent.START_PLAYING:
                     if (Settings.Default.StartOnJoin)
+                    {
+                        component.timer.Start();
+                    }
+                    break;
+                case MinecraftEvent.FIRST_INPUT:
+                    if (Settings.Default.StartOnFirstInput)
                     {
                         component.timer.Start();
                     }
@@ -94,16 +104,23 @@ namespace LiveSplit.Minecraft
                 case MinecraftEvent.CREDITS_REACHED:
                     if (Settings.Default.SplitOnCredits)
                     {
-                        // Make sure to grab the latest igt before splitting
-                        component.memory.Update();
+                        if (component.TimingMethod == MinecraftTimingMethod.IGT)
+                        {
+                            // Make sure to grab the latest igt before splitting
+                            component.memory.UpdateIGT();
+                        }
                         component.timer.Split();
                     }
                     break;
                 case MinecraftEvent.ADVANCEMENT_DONE:
-                    if (AdvancementList.Contains(eventArgs[2]))
+                    if (PendingAdvancements.Contains(eventArgs[2]))
                     {
-                        // Make sure to grab the latest igt before splitting
-                        component.memory.Update();
+                        PendingAdvancements.Remove(eventArgs[2]);
+                        if (component.TimingMethod == MinecraftTimingMethod.IGT)
+                        {
+                            // Make sure to grab the latest igt before splitting
+                            component.memory.UpdateIGT();
+                        }
                         component.timer.Split();
                     }
                     break;
@@ -114,6 +131,7 @@ namespace LiveSplit.Minecraft
 
         public void Dispose()
         {
+            pipe?.Disconnect();
             pipe?.Dispose();
         }
     }

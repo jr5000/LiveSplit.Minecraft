@@ -36,16 +36,20 @@
             this.grpBoxFAQ = new System.Windows.Forms.GroupBox();
             this.labelFAQ = new System.Windows.Forms.Label();
             this.labelVersion = new System.Windows.Forms.Label();
-            this.grpBoxAutosplitterAndLiveIGT = new System.Windows.Forms.GroupBox();
+            this.grpBoxAdvancedFeatures = new System.Windows.Forms.GroupBox();
+            this.grpBoxTimingMethod = new System.Windows.Forms.GroupBox();
+            this.radioBtnIGT = new System.Windows.Forms.RadioButton();
+            this.radioBtnRTAWithoutLoads = new System.Windows.Forms.RadioButton();
             this.btnConfigureAutosplitterSettings = new System.Windows.Forms.Button();
             this.linkInstructions = new System.Windows.Forms.LinkLabel();
             this.linkMod = new System.Windows.Forms.LinkLabel();
             this.labelWarning = new System.Windows.Forms.Label();
-            this.checkBoxAutosplitterEnabled = new System.Windows.Forms.CheckBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBoxAdvancedFeatures = new System.Windows.Forms.CheckBox();
+            this.grpBoxTraditionalIGT = new System.Windows.Forms.GroupBox();
             this.grpBoxFAQ.SuspendLayout();
-            this.grpBoxAutosplitterAndLiveIGT.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.grpBoxAdvancedFeatures.SuspendLayout();
+            this.grpBoxTimingMethod.SuspendLayout();
+            this.grpBoxTraditionalIGT.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtBoxSavesPath
@@ -88,7 +92,7 @@
             // grpBoxFAQ
             // 
             this.grpBoxFAQ.Controls.Add(this.labelFAQ);
-            this.grpBoxFAQ.Location = new System.Drawing.Point(6, 254);
+            this.grpBoxFAQ.Location = new System.Drawing.Point(6, 271);
             this.grpBoxFAQ.Name = "grpBoxFAQ";
             this.grpBoxFAQ.Size = new System.Drawing.Size(419, 246);
             this.grpBoxFAQ.TabIndex = 5;
@@ -113,49 +117,85 @@
             this.labelVersion.TabIndex = 6;
             this.labelVersion.Text = "Version ?.?.?.? by Jorkoh";
             // 
-            // grpBoxAutosplitterAndLiveIGT
+            // grpBoxAdvancedFeatures
             // 
-            this.grpBoxAutosplitterAndLiveIGT.Controls.Add(this.btnConfigureAutosplitterSettings);
-            this.grpBoxAutosplitterAndLiveIGT.Controls.Add(this.linkInstructions);
-            this.grpBoxAutosplitterAndLiveIGT.Controls.Add(this.linkMod);
-            this.grpBoxAutosplitterAndLiveIGT.Controls.Add(this.labelWarning);
-            this.grpBoxAutosplitterAndLiveIGT.Controls.Add(this.checkBoxAutosplitterEnabled);
-            this.grpBoxAutosplitterAndLiveIGT.Location = new System.Drawing.Point(6, 122);
-            this.grpBoxAutosplitterAndLiveIGT.Name = "grpBoxAutosplitterAndLiveIGT";
-            this.grpBoxAutosplitterAndLiveIGT.Size = new System.Drawing.Size(419, 113);
-            this.grpBoxAutosplitterAndLiveIGT.TabIndex = 7;
-            this.grpBoxAutosplitterAndLiveIGT.TabStop = false;
-            this.grpBoxAutosplitterAndLiveIGT.Text = "Autosplitter and Live IGT (experimental)";
+            this.grpBoxAdvancedFeatures.Controls.Add(this.grpBoxTimingMethod);
+            this.grpBoxAdvancedFeatures.Controls.Add(this.btnConfigureAutosplitterSettings);
+            this.grpBoxAdvancedFeatures.Controls.Add(this.linkInstructions);
+            this.grpBoxAdvancedFeatures.Controls.Add(this.linkMod);
+            this.grpBoxAdvancedFeatures.Controls.Add(this.labelWarning);
+            this.grpBoxAdvancedFeatures.Controls.Add(this.checkBoxAdvancedFeatures);
+            this.grpBoxAdvancedFeatures.Location = new System.Drawing.Point(6, 116);
+            this.grpBoxAdvancedFeatures.Name = "grpBoxAdvancedFeatures";
+            this.grpBoxAdvancedFeatures.Size = new System.Drawing.Size(419, 145);
+            this.grpBoxAdvancedFeatures.TabIndex = 7;
+            this.grpBoxAdvancedFeatures.TabStop = false;
+            this.grpBoxAdvancedFeatures.Text = "Advanced Features";
+            // 
+            // grpBoxTimingMethod
+            // 
+            this.grpBoxTimingMethod.Controls.Add(this.radioBtnIGT);
+            this.grpBoxTimingMethod.Controls.Add(this.radioBtnRTAWithoutLoads);
+            this.grpBoxTimingMethod.Location = new System.Drawing.Point(204, 74);
+            this.grpBoxTimingMethod.Name = "grpBoxTimingMethod";
+            this.grpBoxTimingMethod.Size = new System.Drawing.Size(209, 65);
+            this.grpBoxTimingMethod.TabIndex = 19;
+            this.grpBoxTimingMethod.TabStop = false;
+            this.grpBoxTimingMethod.Text = "Timing Method";
+            // 
+            // radioBtnIGT
+            // 
+            this.radioBtnIGT.AutoSize = true;
+            this.radioBtnIGT.Location = new System.Drawing.Point(18, 27);
+            this.radioBtnIGT.Name = "radioBtnIGT";
+            this.radioBtnIGT.Size = new System.Drawing.Size(43, 17);
+            this.radioBtnIGT.TabIndex = 16;
+            this.radioBtnIGT.TabStop = true;
+            this.radioBtnIGT.Text = "IGT";
+            this.radioBtnIGT.UseVisualStyleBackColor = true;
+            this.radioBtnIGT.CheckedChanged += new System.EventHandler(this.RadioBtnIGT_CheckedChanged);
+            // 
+            // radioBtnRTAWithoutLoads
+            // 
+            this.radioBtnRTAWithoutLoads.AutoSize = true;
+            this.radioBtnRTAWithoutLoads.Location = new System.Drawing.Point(88, 27);
+            this.radioBtnRTAWithoutLoads.Name = "radioBtnRTAWithoutLoads";
+            this.radioBtnRTAWithoutLoads.Size = new System.Drawing.Size(101, 17);
+            this.radioBtnRTAWithoutLoads.TabIndex = 17;
+            this.radioBtnRTAWithoutLoads.TabStop = true;
+            this.radioBtnRTAWithoutLoads.Text = "RTA w/o Loads";
+            this.radioBtnRTAWithoutLoads.UseVisualStyleBackColor = true;
+            this.radioBtnRTAWithoutLoads.CheckedChanged += new System.EventHandler(this.RadioBtnRTAWithoutLoads_CheckedChanged);
             // 
             // btnConfigureAutosplitterSettings
             // 
-            this.btnConfigureAutosplitterSettings.Location = new System.Drawing.Point(10, 70);
+            this.btnConfigureAutosplitterSettings.Location = new System.Drawing.Point(35, 86);
             this.btnConfigureAutosplitterSettings.Name = "btnConfigureAutosplitterSettings";
-            this.btnConfigureAutosplitterSettings.Size = new System.Drawing.Size(182, 23);
+            this.btnConfigureAutosplitterSettings.Size = new System.Drawing.Size(99, 38);
             this.btnConfigureAutosplitterSettings.TabIndex = 15;
-            this.btnConfigureAutosplitterSettings.Text = "Configure Autosplitter Settings";
+            this.btnConfigureAutosplitterSettings.Text = "Autosplitter Settings";
             this.btnConfigureAutosplitterSettings.UseVisualStyleBackColor = true;
             this.btnConfigureAutosplitterSettings.Click += new System.EventHandler(this.BtnConfigureAutosplitterSettings_Click);
             // 
             // linkInstructions
             // 
             this.linkInstructions.AutoSize = true;
-            this.linkInstructions.Location = new System.Drawing.Point(248, 78);
+            this.linkInstructions.Location = new System.Drawing.Point(213, 50);
             this.linkInstructions.Name = "linkInstructions";
-            this.linkInstructions.Size = new System.Drawing.Size(124, 13);
+            this.linkInstructions.Size = new System.Drawing.Size(88, 13);
             this.linkInstructions.TabIndex = 10;
             this.linkInstructions.TabStop = true;
-            this.linkInstructions.Text = "VIDEO INSTRUCTIONS";
+            this.linkInstructions.Text = "INSTRUCTIONS";
             // 
             // linkMod
             // 
             this.linkMod.AutoSize = true;
-            this.linkMod.Location = new System.Drawing.Point(248, 49);
+            this.linkMod.Location = new System.Drawing.Point(307, 50);
             this.linkMod.Name = "linkMod";
-            this.linkMod.Size = new System.Drawing.Size(77, 13);
+            this.linkMod.Size = new System.Drawing.Size(99, 13);
             this.linkMod.TabIndex = 9;
             this.linkMod.TabStop = true;
-            this.linkMod.Text = "LINK TO MOD";
+            this.linkMod.Text = "DOWNLOAD MOD";
             this.linkMod.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkMod_LinkClicked);
             // 
             // labelWarning
@@ -168,46 +208,48 @@
             this.labelWarning.TabIndex = 8;
             this.labelWarning.Text = "Requires mod to work! Only for Minecraft 1.14 and above!";
             // 
-            // checkBoxAutosplitterEnabled
+            // checkBoxAdvancedFeatures
             // 
-            this.checkBoxAutosplitterEnabled.AutoSize = true;
-            this.checkBoxAutosplitterEnabled.Location = new System.Drawing.Point(10, 45);
-            this.checkBoxAutosplitterEnabled.Name = "checkBoxAutosplitterEnabled";
-            this.checkBoxAutosplitterEnabled.Size = new System.Drawing.Size(179, 17);
-            this.checkBoxAutosplitterEnabled.TabIndex = 0;
-            this.checkBoxAutosplitterEnabled.Text = "Enable Autosplitter and Live IGT";
-            this.checkBoxAutosplitterEnabled.UseVisualStyleBackColor = true;
-            this.checkBoxAutosplitterEnabled.CheckedChanged += new System.EventHandler(this.CheckBoxAutosplitterEnabled_CheckedChanged);
+            this.checkBoxAdvancedFeatures.AutoSize = true;
+            this.checkBoxAdvancedFeatures.Location = new System.Drawing.Point(10, 49);
+            this.checkBoxAdvancedFeatures.Name = "checkBoxAdvancedFeatures";
+            this.checkBoxAdvancedFeatures.Size = new System.Drawing.Size(155, 17);
+            this.checkBoxAdvancedFeatures.TabIndex = 0;
+            this.checkBoxAdvancedFeatures.Text = "Enable Advanced Features";
+            this.checkBoxAdvancedFeatures.UseVisualStyleBackColor = true;
+            this.checkBoxAdvancedFeatures.CheckedChanged += new System.EventHandler(this.CheckBoxAutosplitterEnabled_CheckedChanged);
             // 
-            // groupBox1
+            // grpBoxTraditionalIGT
             // 
-            this.groupBox1.Controls.Add(this.labelSavesPath);
-            this.groupBox1.Controls.Add(this.txtBoxSavesPath);
-            this.groupBox1.Controls.Add(this.btnChangeSavesPath);
-            this.groupBox1.Controls.Add(this.btnResetSavesPath);
-            this.groupBox1.Location = new System.Drawing.Point(6, 3);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(419, 100);
-            this.groupBox1.TabIndex = 8;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Traditional IGT";
+            this.grpBoxTraditionalIGT.Controls.Add(this.labelSavesPath);
+            this.grpBoxTraditionalIGT.Controls.Add(this.txtBoxSavesPath);
+            this.grpBoxTraditionalIGT.Controls.Add(this.btnChangeSavesPath);
+            this.grpBoxTraditionalIGT.Controls.Add(this.btnResetSavesPath);
+            this.grpBoxTraditionalIGT.Location = new System.Drawing.Point(6, 3);
+            this.grpBoxTraditionalIGT.Name = "grpBoxTraditionalIGT";
+            this.grpBoxTraditionalIGT.Size = new System.Drawing.Size(419, 100);
+            this.grpBoxTraditionalIGT.TabIndex = 8;
+            this.grpBoxTraditionalIGT.TabStop = false;
+            this.grpBoxTraditionalIGT.Text = "Traditional IGT";
             // 
             // MinecraftSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.grpBoxTraditionalIGT);
             this.Controls.Add(this.grpBoxFAQ);
-            this.Controls.Add(this.grpBoxAutosplitterAndLiveIGT);
+            this.Controls.Add(this.grpBoxAdvancedFeatures);
             this.Controls.Add(this.labelVersion);
             this.Name = "MinecraftSettings";
             this.Size = new System.Drawing.Size(475, 560);
             this.Load += new System.EventHandler(this.MinecraftSettings_Load);
             this.grpBoxFAQ.ResumeLayout(false);
-            this.grpBoxAutosplitterAndLiveIGT.ResumeLayout(false);
-            this.grpBoxAutosplitterAndLiveIGT.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.grpBoxAdvancedFeatures.ResumeLayout(false);
+            this.grpBoxAdvancedFeatures.PerformLayout();
+            this.grpBoxTimingMethod.ResumeLayout(false);
+            this.grpBoxTimingMethod.PerformLayout();
+            this.grpBoxTraditionalIGT.ResumeLayout(false);
+            this.grpBoxTraditionalIGT.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -221,12 +263,15 @@
         private System.Windows.Forms.GroupBox grpBoxFAQ;
         private System.Windows.Forms.Label labelFAQ;
         private System.Windows.Forms.Label labelVersion;
-        private System.Windows.Forms.GroupBox grpBoxAutosplitterAndLiveIGT;
-        private System.Windows.Forms.CheckBox checkBoxAutosplitterEnabled;
+        private System.Windows.Forms.GroupBox grpBoxAdvancedFeatures;
+        private System.Windows.Forms.CheckBox checkBoxAdvancedFeatures;
         private System.Windows.Forms.LinkLabel linkInstructions;
         private System.Windows.Forms.LinkLabel linkMod;
         private System.Windows.Forms.Label labelWarning;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox grpBoxTraditionalIGT;
         private System.Windows.Forms.Button btnConfigureAutosplitterSettings;
+        private System.Windows.Forms.RadioButton radioBtnRTAWithoutLoads;
+        private System.Windows.Forms.RadioButton radioBtnIGT;
+        private System.Windows.Forms.GroupBox grpBoxTimingMethod;
     }
 }

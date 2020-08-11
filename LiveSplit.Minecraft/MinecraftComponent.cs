@@ -1,4 +1,5 @@
 ﻿using LiveSplit.Model;
+using LiveSplit.Model.Input;
 using LiveSplit.UI;
 using System;
 using System.Collections.Generic;
@@ -11,8 +12,15 @@ using System.Xml;
 
 namespace LiveSplit.Minecraft
 {
+    public enum MinecraftTimingMethod
+    {
+        IGT,
+        RTA_WITHOUT_LOADS
+    }
+
     public class MinecraftComponent : LiveSplit.UI.Components.IComponent
     {
+
         public readonly TimerModel timer;
         public readonly MinecraftMemory memory;
         public readonly MinecraftAutosplitter autosplitter;
@@ -21,25 +29,30 @@ namespace LiveSplit.Minecraft
         // Limit the rate at which some operations are done since they are too expensive to run on every udpate()
         private DateTime nextIGTCheck;
 
-        // Avoids checking the autosplitter setting on every update()
-        private bool autosplitterEnabled;
+        // Avoids checking the setting on every update()
+        private bool advancedFeaturesEnabled;
+
+        // Avoids checking the setting on every update()
+        public MinecraftTimingMethod TimingMethod { get; private set; }
 
         private string latestSaveStatsPath;
 
         public MinecraftComponent(LiveSplitState state)
         {
             timer = new TimerModel() { CurrentState = state };
+            timer.CurrentState.IsGameTimePaused = true;
 
             settings = new MinecraftSettings(this);
             memory = new MinecraftMemory(this);
             autosplitter = new MinecraftAutosplitter(this);
 
             state.OnStart += OnStart;
+            state.OnReset += OnReset;
 
-            autosplitterEnabled = Properties.Settings.Default.AutosplitterEnabled;
+            advancedFeaturesEnabled = Properties.Settings.Default.AdvancedFeaturesEnabled;
             Properties.Settings.Default.PropertyChanged += OnSettingsChanged;
 
-            if (autosplitterEnabled)
+            if (advancedFeaturesEnabled)
             {
                 SetupAutosplitter();
             }
@@ -47,14 +60,18 @@ namespace LiveSplit.Minecraft
 
         public void Update(IInvalidator invalidator, LiveSplitState state, float width, float height, LayoutMode mode)
         {
-            state.IsGameTimePaused = true;
+            // Check the hook on every update
+            bool isStillHooked = memory.IsStillHooked();
 
-            if (autosplitterEnabled && memory.IsStillHooked())
+            // Game time only auto increments between updates when doing rta without loads TODO cache this?
+            state.IsGameTimePaused = (TimingMethod != MinecraftTimingMethod.RTA_WITHOUT_LOADS) || memory.IsPaused();
+
+            if (advancedFeaturesEnabled && TimingMethod == MinecraftTimingMethod.IGT && isStillHooked)
             {
-                memory.Update();
+                memory.UpdateIGT();
             }
 
-            if (!autosplitterEnabled && ShouldCheckIGT())
+            if (!advancedFeaturesEnabled && ShouldCheckIGT())
             {
                 // If the timer is not running yet check if the stats folder exists first to avoid exceptions during world creation
                 if (timer.CurrentState.CurrentPhase == TimerPhase.NotRunning && !Directory.Exists(latestSaveStatsPath)) return;
@@ -112,7 +129,7 @@ namespace LiveSplit.Minecraft
             {
                 timer.Reset();
                 MessageBox.Show("Couldn't find the Minecraft world save.\n\n" +
-                    "Check that your saves location is correct on the settings page and there is already a save to extract the IGT from.",
+                    "Check that your saves location is correct on the settings page and that there is already a save to extract the IGT from.",
                     ComponentName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -124,14 +141,22 @@ namespace LiveSplit.Minecraft
             var statStart = statsText.IndexOf("inute\":") + 7;
             var statEnd = statsText.IndexOf(",", statStart);
 
-            return Int32.Parse(statsText.Substring(statStart, statEnd - statStart));
+            return int.Parse(statsText.Substring(statStart, statEnd - statStart));
         }
 
         private void OnStart(object sender, EventArgs e)
         {
-            if (!autosplitterEnabled)
+            if (!advancedFeaturesEnabled)
             {
                 FindLatestSaveLevelPath();
+            }
+        }
+
+        private void OnReset(object sender, TimerPhase phase)
+        {
+            if (advancedFeaturesEnabled)
+            {
+                autosplitter.SetupAdvancements();
             }
         }
 
@@ -139,13 +164,18 @@ namespace LiveSplit.Minecraft
         {
             switch (e.PropertyName)
             {
-                case "AutosplitterEnabled":
-                    autosplitterEnabled = Properties.Settings.Default.AutosplitterEnabled;
+                case "AdvancedFeaturesEnabled":
+                    advancedFeaturesEnabled = Properties.Settings.Default.AdvancedFeaturesEnabled;
                     timer.Reset();
-                    if (autosplitterEnabled)
+                    if (advancedFeaturesEnabled)
                     {
                         SetupAutosplitter();
                     }
+                    break;
+                case "TimingMethod":
+                    TimingMethod = (MinecraftTimingMethod)Properties.Settings.Default.TimingMethod;
+                    // TODO is this needed?
+                    timer.Reset();
                     break;
                 case "Advancements":
                     // Set the enabled advancements as the advancement list for the autosplitter
@@ -158,7 +188,7 @@ namespace LiveSplit.Minecraft
 
         private void SetupAutosplitter()
         {
-            timer.CurrentState.CurrentTimingMethod = TimingMethod.GameTime;
+            timer.CurrentState.CurrentTimingMethod = Model.TimingMethod.GameTime;
             autosplitter.Setup();
         }
 

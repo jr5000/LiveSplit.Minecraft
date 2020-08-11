@@ -30,6 +30,8 @@ namespace LiveSplit.Minecraft
                 // The game has exited and we need to clean up
                 MinecraftProcess.Dispose();
                 MinecraftProcess = null;
+                ticksPointer = null;
+                isPausedPointer = null;
                 return false;
             }
             else
@@ -91,19 +93,23 @@ namespace LiveSplit.Minecraft
             {
                 MessageBox.Show("The autosplitter couldn't find a memory region and has been automatically disabled.",
                     component.ComponentName, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Properties.Settings.Default.AutosplitterEnabled = false;
+                Properties.Settings.Default.AdvancedFeaturesEnabled = false;
                 Properties.Settings.Default.Save();
                 return false;
             }
 
             ticksPointer = scanResults[0].Pointer + 0x10;
+            isPausedPointer = scanResults[0].Pointer + 0x14;
             return true;
         }
 
-        public void Update()
+        public void UpdateIGT()
         {
+            var newTicks = GetTicks();
+            if (newTicks == -1) return;
+
             oldTicks = currentTicks;
-            currentTicks = GetTicks();
+            currentTicks = newTicks;
 
             if (oldTicks != currentTicks)
             {
@@ -114,15 +120,21 @@ namespace LiveSplit.Minecraft
 
         private int GetTicks()
         {
-            if (MinecraftProcess != null && ticksPointer != null && MinecraftProcess.ReadValue(ticksPointer, out int ticks))
+            if (MinecraftProcess != null && ticksPointer.HasValue && MinecraftProcess.ReadValue(ticksPointer.Value, out int ticks))
             {
                 return ticks;
             }
             else
             {
-                return 0;
+                return -1;
             }
         }
-        private IntPtr ticksPointer;
+        private IntPtr? ticksPointer;
+
+        public bool IsPaused()
+        {
+            return MinecraftProcess == null || !isPausedPointer.HasValue || MinecraftProcess.ReadValue<bool>(isPausedPointer.Value, true);
+        }
+        private IntPtr? isPausedPointer;
     }
 }

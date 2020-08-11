@@ -41,8 +41,12 @@ namespace LiveSplit.Minecraft
         {
             txtBoxSavesPath.Text = Properties.Settings.Default.SavesPath;
 
-            checkBoxAutosplitterEnabled.Checked = Properties.Settings.Default.AutosplitterEnabled;
-            btnConfigureAutosplitterSettings.Enabled = Properties.Settings.Default.AutosplitterEnabled;
+            checkBoxAdvancedFeatures.Checked = Properties.Settings.Default.AdvancedFeaturesEnabled;
+            btnConfigureAutosplitterSettings.Enabled = Properties.Settings.Default.AdvancedFeaturesEnabled;
+            grpBoxTimingMethod.Enabled = Properties.Settings.Default.AdvancedFeaturesEnabled;
+
+            radioBtnIGT.Checked = (MinecraftTimingMethod)Properties.Settings.Default.TimingMethod == MinecraftTimingMethod.IGT;
+            radioBtnRTAWithoutLoads.Checked = (MinecraftTimingMethod)Properties.Settings.Default.TimingMethod == MinecraftTimingMethod.RTA_WITHOUT_LOADS;
 
             labelVersion.Text = $"Version {Assembly.GetExecutingAssembly().GetName().Version} by Jorkoh";
         }
@@ -70,12 +74,13 @@ namespace LiveSplit.Minecraft
 
         private void CheckBoxAutosplitterEnabled_CheckedChanged(object sender, EventArgs e)
         {
-            if (Properties.Settings.Default.AutosplitterEnabled != checkBoxAutosplitterEnabled.Checked)
+            if (Properties.Settings.Default.AdvancedFeaturesEnabled != checkBoxAdvancedFeatures.Checked)
             {
-                Properties.Settings.Default.AutosplitterEnabled = checkBoxAutosplitterEnabled.Checked;
+                Properties.Settings.Default.AdvancedFeaturesEnabled = checkBoxAdvancedFeatures.Checked;
                 Properties.Settings.Default.Save();
 
-                btnConfigureAutosplitterSettings.Enabled = Properties.Settings.Default.AutosplitterEnabled;
+                btnConfigureAutosplitterSettings.Enabled = Properties.Settings.Default.AdvancedFeaturesEnabled;
+                grpBoxTimingMethod.Enabled = Properties.Settings.Default.AdvancedFeaturesEnabled;
             }
         }
 
@@ -87,6 +92,30 @@ namespace LiveSplit.Minecraft
         private void BtnConfigureAutosplitterSettings_Click(object sender, EventArgs e)
         {
             new MinecraftAutosplitterSettings(component).ShowDialog();
+        }
+
+        private void RadioBtnIGT_CheckedChanged(object sender, EventArgs e)
+        {
+            SetTimingMethod();
+        }
+
+        private void RadioBtnRTAWithoutLoads_CheckedChanged(object sender, EventArgs e)
+        {
+            SetTimingMethod();
+        }
+
+        private void SetTimingMethod()
+        {
+            if (radioBtnIGT.Checked && (MinecraftTimingMethod)Properties.Settings.Default.TimingMethod != MinecraftTimingMethod.IGT)
+            {
+                Properties.Settings.Default.TimingMethod = (int)MinecraftTimingMethod.IGT;
+                Properties.Settings.Default.Save();
+            }
+            else if (radioBtnRTAWithoutLoads.Checked && (MinecraftTimingMethod)Properties.Settings.Default.TimingMethod != MinecraftTimingMethod.RTA_WITHOUT_LOADS)
+            {
+                Properties.Settings.Default.TimingMethod = (int)MinecraftTimingMethod.RTA_WITHOUT_LOADS;
+                Properties.Settings.Default.Save();
+            }
         }
     }
 }

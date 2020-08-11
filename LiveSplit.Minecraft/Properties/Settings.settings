@@ -8,7 +8,7 @@
     <Setting Name="SavesPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">not_set</Value>
     </Setting>
-    <Setting Name="AutosplitterEnabled" Type="System.Boolean" Scope="User">
+    <Setting Name="AdvancedFeaturesEnabled" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="ResetOnCreation" Type="System.Boolean" Scope="User">
@@ -19,6 +19,12 @@
     </Setting>
     <Setting Name="SplitOnCredits" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="StartOnFirstInput" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="TimingMethod" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="Advancements" Type="System.Collections.Specialized.StringCollection" Scope="User">
       <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
