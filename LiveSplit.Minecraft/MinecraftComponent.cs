@@ -192,10 +192,7 @@ namespace LiveSplit.Minecraft
             autosplitter.Setup();
         }
 
-        public void Dispose()
-        {
-            autosplitter.Dispose();
-        }
+        public void Dispose() { }
 
         public Control GetSettingsControl(LayoutMode mode) => settings;
 

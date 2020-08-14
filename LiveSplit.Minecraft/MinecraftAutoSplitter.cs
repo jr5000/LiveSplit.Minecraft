@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -12,14 +14,19 @@ namespace LiveSplit.Minecraft
     {
         private readonly MinecraftComponent component;
 
-        private NamedPipeServerStream pipe;
-        private StreamReader pipeReader;
+        private readonly PipeSecurity pipeSecurity;
 
         private HashSet<string> PendingAdvancements;
 
         public MinecraftAutosplitter(MinecraftComponent component)
         {
             this.component = component;
+
+            pipeSecurity = new PipeSecurity();
+            pipeSecurity.SetAccessRule(new PipeAccessRule(
+                new SecurityIdentifier(WellKnownSidType.WorldSid, null),
+                PipeAccessRights.ReadWrite,
+                AccessControlType.Allow));
         }
 
         public void Setup()
@@ -30,20 +37,20 @@ namespace LiveSplit.Minecraft
 
         private void SetupPipe()
         {
-            pipe = new NamedPipeServerStream("LiveSplit.Minecraft", PipeDirection.InOut, -1, PipeTransmissionMode.Byte, PipeOptions.None);
-            Task.Factory.StartNew(() =>
+            Task.Run(() =>
             {
-                pipe.WaitForConnection();
-                pipeReader = new StreamReader(pipe);
-                while (pipe.IsConnected)
+                using (var pipe = new NamedPipeServerStream("LiveSplit.Minecraft", PipeDirection.InOut, 1, PipeTransmissionMode.Message, PipeOptions.None, 512, 512, pipeSecurity))
                 {
-                    HandleMinecraftEvent();
+                    pipe.WaitForConnection();
+                    using (var reader = new StreamReader(pipe))
+                    {
+                        while (pipe.IsConnected)
+                        {
+                            HandleMinecraftEvent(reader);
+                        }
+                    }
                 }
-                pipe.Disconnect();
-                pipe.Dispose();
-                // TODO figure out a way to reuse the pipe, currently it breaks when MC closes and has to be recreated
-                SetupPipe();
-            });
+            }).ContinueWith(t => SetupPipe());
         }
 
         public void SetupAdvancements()
@@ -65,9 +72,9 @@ namespace LiveSplit.Minecraft
             public const string ADVANCEMENT_DONE = "ADVANCEMENT_DONE";
         }
 
-        private void HandleMinecraftEvent()
+        private void HandleMinecraftEvent(StreamReader reader)
         {
-            var line = pipeReader.ReadLine();
+            var line = reader.ReadLine();
 
             // If the read line is not a valid event pass
             if (line == null || !line.StartsWith("EVENT")) return;
@@ -127,11 +134,6 @@ namespace LiveSplit.Minecraft
                 default:
                     break;
             }
-        }
-
-        public void Dispose()
-        {
-            pipe?.Dispose();
         }
     }
 }
