@@ -54,7 +54,7 @@ namespace LiveSplit.Minecraft
 
             if (advancedFeaturesEnabled)
             {
-                SetupAutosplitter();
+                autosplitter.Setup();
             }
         }
 
@@ -169,7 +169,7 @@ namespace LiveSplit.Minecraft
                     timer.Reset();
                     if (advancedFeaturesEnabled)
                     {
-                        SetupAutosplitter();
+                        autosplitter.Setup();
                     }
                     break;
                 case "TimingMethod":
@@ -184,12 +184,6 @@ namespace LiveSplit.Minecraft
                 default:
                     break;
             }
-        }
-
-        private void SetupAutosplitter()
-        {
-            timer.CurrentState.CurrentTimingMethod = Model.TimingMethod.GameTime;
-            autosplitter.Setup();
         }
 
         public void Dispose() { }
