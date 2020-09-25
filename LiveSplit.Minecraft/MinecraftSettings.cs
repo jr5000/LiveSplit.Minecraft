@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using LiveSplit.Model;
+﻿using LiveSplit.Model;
+using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Windows.Forms;
 
 namespace LiveSplit.Minecraft
 {
@@ -18,7 +12,7 @@ namespace LiveSplit.Minecraft
         private readonly MinecraftComponent component;
 
         // No, I won't learn Windows Forms databinding
-        public MinecraftSettings(MinecraftComponent component)
+        public MinecraftSettings(MinecraftComponent component, LiveSplitState state)
         {
             this.component = component;
             // This (↓) initialize is for the Windows Form, not the MinecraftComponent
@@ -28,6 +22,9 @@ namespace LiveSplit.Minecraft
             {
                 Properties.Settings.Default.FirstLaunch = false;
 
+                // Enable global hotkeys by default
+                state.Settings.GlobalHotkeysEnabled = true;
+
                 // Set the saves path to the standard one
                 var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
                 Properties.Settings.Default.SavesPath = Path.Combine(appDataPath, ".minecraft", "saves");
@@ -35,28 +32,44 @@ namespace LiveSplit.Minecraft
                 Properties.Settings.Default.Save();
 
                 // Encourage the user to check the settings page on first launch
-                MessageBox.Show($"Minecraft saves folder location has been automatically set to:\n\n" +
+                MessageBox.Show($"Minecraft saves folder location has been set to:\n\n" +
                     $"{Properties.Settings.Default.SavesPath}\n\n" +
-                    $"It can be changed on the settings page where you will also find other options and instructions. Good luck in your runs!",
+                    $"It can be changed on the settings page where you will also find other options and instructions. Global hotkeys have been enabled. Good luck in your runs!",
                     this.component.ComponentName, MessageBoxButtons.OK);
             }
+
+            Properties.Settings.Default.PropertyChanged += PropertyChanged;
+        }
+
+        private void PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            LoadProperties();
         }
 
         private void MinecraftSettings_Load(object sender, EventArgs e)
         {
+            LoadProperties();
+            labelVersion.Text = $"Version {Assembly.GetExecutingAssembly().GetName().Version} by Kohru";
+        }
+
+        private void LoadProperties()
+        {
             txtBoxSavesPath.Text = Properties.Settings.Default.SavesPath;
-            labelVersion.Text = $"Version {Assembly.GetExecutingAssembly().GetName().Version} by Jorkoh";
+            checkBoxAutosplitter.Checked = Properties.Settings.Default.AutosplitterEnabled;
         }
 
         private void BtnChangeSavesPath_Click(object sender, EventArgs e)
         {
             var dialog = new FolderBrowserDialog();
-            dialog.ShowDialog();
+            var result = dialog.ShowDialog();
 
-            Properties.Settings.Default.SavesPath = dialog.SelectedPath;
-            Properties.Settings.Default.Save();
+            if(result == DialogResult.OK)
+            {
+                Properties.Settings.Default.SavesPath = dialog.SelectedPath;
+                Properties.Settings.Default.Save();
 
-            txtBoxSavesPath.Text = Properties.Settings.Default.SavesPath;
+                txtBoxSavesPath.Text = Properties.Settings.Default.SavesPath;
+            }
         }
 
 
@@ -67,6 +80,20 @@ namespace LiveSplit.Minecraft
             Properties.Settings.Default.Save();
 
             txtBoxSavesPath.Text = Properties.Settings.Default.SavesPath;
+        }
+
+        private void LinkInstructions_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://www.youtube.com/watch?v=Ij7HDfbv63g");
+        }
+
+        private void CheckBoxAutosplitter_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Properties.Settings.Default.AutosplitterEnabled != checkBoxAutosplitter.Checked)
+            {
+                Properties.Settings.Default.AutosplitterEnabled = checkBoxAutosplitter.Checked;
+                Properties.Settings.Default.Save();
+            }
         }
     }
 }

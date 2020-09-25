@@ -54,7 +54,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MinecraftMemory.cs" />
     <Compile Include="MinecraftComponent.cs" />
     <Compile Include="MinecraftComponentFactory.cs" />
     <Compile Include="MinecraftSettings.cs">

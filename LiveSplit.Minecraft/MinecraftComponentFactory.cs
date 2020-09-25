@@ -9,7 +9,7 @@ namespace LiveSplit.Minecraft
     {
         public string ComponentName => "Minecraft IGT";
 
-        public string Description => "Minecraft In-Game Time by Jorkoh https://github.com/Jorkoh/LiveSplit.Minecraft";
+        public string Description => "Minecraft IGT by Kohru https://github.com/Jorkoh/LiveSplit.Minecraft";
 
         public ComponentCategory Category => ComponentCategory.Timer;
 

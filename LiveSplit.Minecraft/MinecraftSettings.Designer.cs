@@ -28,21 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MinecraftSettings));
             this.txtBoxSavesPath = new System.Windows.Forms.TextBox();
             this.labelSavesPath = new System.Windows.Forms.Label();
             this.btnChangeSavesPath = new System.Windows.Forms.Button();
             this.btnResetSavesPath = new System.Windows.Forms.Button();
-            this.grpBoxFAQ = new System.Windows.Forms.GroupBox();
-            this.labelFAQ = new System.Windows.Forms.Label();
             this.labelVersion = new System.Windows.Forms.Label();
-            this.grpBoxFAQ.SuspendLayout();
+            this.linkInstructions = new System.Windows.Forms.LinkLabel();
+            this.checkBoxAutosplitter = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // txtBoxSavesPath
             // 
             this.txtBoxSavesPath.Enabled = false;
-            this.txtBoxSavesPath.Location = new System.Drawing.Point(6, 27);
+            this.txtBoxSavesPath.Location = new System.Drawing.Point(13, 33);
             this.txtBoxSavesPath.Name = "txtBoxSavesPath";
             this.txtBoxSavesPath.Size = new System.Drawing.Size(364, 20);
             this.txtBoxSavesPath.TabIndex = 0;
@@ -50,7 +48,7 @@
             // labelSavesPath
             // 
             this.labelSavesPath.AutoSize = true;
-            this.labelSavesPath.Location = new System.Drawing.Point(3, 11);
+            this.labelSavesPath.Location = new System.Drawing.Point(10, 17);
             this.labelSavesPath.Name = "labelSavesPath";
             this.labelSavesPath.Size = new System.Drawing.Size(80, 13);
             this.labelSavesPath.TabIndex = 1;
@@ -58,7 +56,7 @@
             // 
             // btnChangeSavesPath
             // 
-            this.btnChangeSavesPath.Location = new System.Drawing.Point(6, 53);
+            this.btnChangeSavesPath.Location = new System.Drawing.Point(13, 59);
             this.btnChangeSavesPath.Name = "btnChangeSavesPath";
             this.btnChangeSavesPath.Size = new System.Drawing.Size(124, 23);
             this.btnChangeSavesPath.TabIndex = 2;
@@ -68,7 +66,7 @@
             // 
             // btnResetSavesPath
             // 
-            this.btnResetSavesPath.Location = new System.Drawing.Point(135, 53);
+            this.btnResetSavesPath.Location = new System.Drawing.Point(142, 59);
             this.btnResetSavesPath.Name = "btnResetSavesPath";
             this.btnResetSavesPath.Size = new System.Drawing.Size(124, 23);
             this.btnResetSavesPath.TabIndex = 3;
@@ -76,48 +74,53 @@
             this.btnResetSavesPath.UseVisualStyleBackColor = true;
             this.btnResetSavesPath.Click += new System.EventHandler(this.BtnResetSavesPath_Click);
             // 
-            // grpBoxFAQ
-            // 
-            this.grpBoxFAQ.Controls.Add(this.labelFAQ);
-            this.grpBoxFAQ.Location = new System.Drawing.Point(6, 95);
-            this.grpBoxFAQ.Name = "grpBoxFAQ";
-            this.grpBoxFAQ.Size = new System.Drawing.Size(364, 246);
-            this.grpBoxFAQ.TabIndex = 5;
-            this.grpBoxFAQ.TabStop = false;
-            this.grpBoxFAQ.Text = "F.A.Q.";
-            // 
-            // labelFAQ
-            // 
-            this.labelFAQ.Location = new System.Drawing.Point(7, 20);
-            this.labelFAQ.Name = "labelFAQ";
-            this.labelFAQ.Size = new System.Drawing.Size(351, 223);
-            this.labelFAQ.TabIndex = 0;
-            this.labelFAQ.Text = resources.GetString("labelFAQ.Text");
-            // 
             // labelVersion
             // 
             this.labelVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelVersion.AutoSize = true;
-            this.labelVersion.Location = new System.Drawing.Point(329, 459);
+            this.labelVersion.Location = new System.Drawing.Point(10, 463);
             this.labelVersion.Name = "labelVersion";
-            this.labelVersion.Size = new System.Drawing.Size(118, 13);
+            this.labelVersion.Size = new System.Drawing.Size(114, 13);
             this.labelVersion.TabIndex = 6;
-            this.labelVersion.Text = "Version ?.?.? by Jorkoh";
+            this.labelVersion.Text = "Version ?.?.? by Kohru";
+            // 
+            // linkInstructions
+            // 
+            this.linkInstructions.AutoSize = true;
+            this.linkInstructions.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkInstructions.Location = new System.Drawing.Point(33, 261);
+            this.linkInstructions.Name = "linkInstructions";
+            this.linkInstructions.Size = new System.Drawing.Size(396, 24);
+            this.linkInstructions.TabIndex = 11;
+            this.linkInstructions.TabStop = true;
+            this.linkInstructions.Text = "INSTRUCTIONS AND FAQ, PLEASE WATCH";
+            this.linkInstructions.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkInstructions_LinkClicked);
+            // 
+            // checkBoxAutosplitter
+            // 
+            this.checkBoxAutosplitter.AutoSize = true;
+            this.checkBoxAutosplitter.Location = new System.Drawing.Point(13, 109);
+            this.checkBoxAutosplitter.Name = "checkBoxAutosplitter";
+            this.checkBoxAutosplitter.Size = new System.Drawing.Size(149, 17);
+            this.checkBoxAutosplitter.TabIndex = 12;
+            this.checkBoxAutosplitter.Text = "Enable autosplitter (+1.12)";
+            this.checkBoxAutosplitter.UseVisualStyleBackColor = true;
+            this.checkBoxAutosplitter.CheckedChanged += new System.EventHandler(this.CheckBoxAutosplitter_CheckedChanged);
             // 
             // MinecraftSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.labelVersion);
-            this.Controls.Add(this.btnResetSavesPath);
-            this.Controls.Add(this.btnChangeSavesPath);
+            this.Controls.Add(this.checkBoxAutosplitter);
             this.Controls.Add(this.labelSavesPath);
             this.Controls.Add(this.txtBoxSavesPath);
-            this.Controls.Add(this.grpBoxFAQ);
+            this.Controls.Add(this.btnResetSavesPath);
+            this.Controls.Add(this.btnChangeSavesPath);
+            this.Controls.Add(this.linkInstructions);
+            this.Controls.Add(this.labelVersion);
             this.Name = "MinecraftSettings";
             this.Size = new System.Drawing.Size(475, 485);
             this.Load += new System.EventHandler(this.MinecraftSettings_Load);
-            this.grpBoxFAQ.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -128,8 +131,8 @@
         private System.Windows.Forms.Label labelSavesPath;
         private System.Windows.Forms.Button btnChangeSavesPath;
         private System.Windows.Forms.Button btnResetSavesPath;
-        private System.Windows.Forms.GroupBox grpBoxFAQ;
-        private System.Windows.Forms.Label labelFAQ;
         private System.Windows.Forms.Label labelVersion;
+        private System.Windows.Forms.LinkLabel linkInstructions;
+        private System.Windows.Forms.CheckBox checkBoxAutosplitter;
     }
 }

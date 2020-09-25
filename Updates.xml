@@ -1,4 +1,15 @@
 ﻿<updates>
+	<update version="1.0.3">
+		<files>
+			<file path="Components/LiveSplit.Minecraft.dll" status="changed"/>
+		</files>
+		<changelog>
+			<change>Added basic autosplitting support.</change>
+			<change>Added new video with improved installation instructions and FAQ.</change>
+			<change>Fixed IGT not updating while the timer was paused (hi dimeax__).</change>
+			<change>Fixed other minor stuff.</change>
+		</changelog>
+	</update>
 	<update version="1.0.2">
 		<files>
 			<file path="Components/LiveSplit.Minecraft.dll" status="changed"/>

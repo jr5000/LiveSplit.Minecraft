@@ -117,17 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="labelFAQ.Text" xml:space="preserve">
-    <value>• How do I show IGT?
-Edit layout &gt; Add timer &gt; Set Timing Method to Game Time on the new timer
-
-• IGT doesn't update until I pause!
-IGT is extracted from level.dat and Minecraft only updates the value on certain situations. I'm working on solutions to this issue.
-
-• IGT doesn't work!
-Make sure that the saves locations is correct, specially if you are using a non-default launcher.
-
-• It doesn't autosplit!
-This is not an autosplitter, you have to manually start and stop the timer. This tool only provides IGT. I'm working on an autosplitter but it's not ready yet.</value>
-  </data>
 </root>
