@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 using fNbt;
@@ -20,8 +21,10 @@ namespace LiveSplit.Minecraft
         // Limit the rate at which some operations are done since they are too expensive to run on every udpate()
         private const int AUTOSPLITTER_CHECK_DELAY = 500;
         private const int IGT_CHECK_DELAY = 1000;
+        private readonly MinecraftSettings settings;
+        private readonly TimerModel timer;
 
-        private readonly string[] _113WoolIds =
+        private readonly string[] woolIds113 =
         {
             "white_wool",
             "orange_wool",
@@ -41,14 +44,13 @@ namespace LiveSplit.Minecraft
             "black_wool"
         };
 
-        private readonly bool[] _wools = new bool[16];
-        private readonly MinecraftSettings settings;
-        private readonly TimerModel timer;
+        private readonly bool[] wools = new bool[16];
 
         private string latestSavePath;
         private string latestSaveStatsPath;
         private DateTime nextAutosplitterCheck;
         private DateTime nextIGTCheck;
+        private FileSystemWatcher watcher;
 
         public MinecraftComponent(LiveSplitState state)
         {
@@ -164,30 +166,59 @@ namespace LiveSplit.Minecraft
         {
             var previousLatestSavePath = latestSavePath;
             latestSavePath = FindLatestSavePath();
-            var levelDat = new NbtFile(Path.Combine(latestSavePath, "level.dat"));
+            if (latestSavePath != previousLatestSavePath)
+            {
+                watcher?.Dispose();
+                watcher = new FileSystemWatcher
+                {
+                    Path = latestSavePath, NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
+                                                                                   | NotifyFilters.FileName |
+                                                                                   NotifyFilters.DirectoryName |
+                                                                                   NotifyFilters.Size |
+                                                                                   NotifyFilters.Attributes,
+                    Filter = "*.*"
+                };
+                watcher.Renamed += NewLevelDat;
+                watcher.EnableRaisingEvents = true;
+            }
 
             if (timer.CurrentState.CurrentPhase == TimerPhase.NotRunning)
-                for (var i = 0; i < _wools.Length; i++)
-                    _wools[i] = false;
+                for (var i = 0; i < wools.Length; i++)
+                    wools[i] = false;
+        }
 
-            if (timer.CurrentState.CurrentPhase == TimerPhase.Running &&
-                latestSavePath == previousLatestSavePath
-                && NewWool(levelDat))
-                timer.Split();
+        private void NewLevelDat(object sender, RenamedEventArgs e)
+        {
+            if (e.Name != "level.dat" || e.OldName != "level.dat_new" ||
+                e.ChangeType != WatcherChangeTypes.Renamed) return;
+            if (timer.CurrentState.CurrentPhase != TimerPhase.Running) return;
+
+            // It's possible that we're so fast that either Minecraft hasn't finished writing the file
+            // or hasn't yet released the filesystem lock, so do the dumb hacky thing of retry for a few milliseconds lol
+            for (var i = 0; i < 5; i++)
+                try
+                {
+                    if (NewWool(new NbtFile(e.FullPath)))
+                        timer.Split();
+                    return;
+                }
+                catch (Exception)
+                {
+                    Thread.Sleep(1);
+                }
         }
 
         private bool NewWool(NbtFile levelDat)
         {
             var dataFormat = levelDat.RootTag.First()["DataVersion"]?.IntValue ?? -1;
-            var playerInventory = levelDat.RootTag.First()["Player"]["Inventory"];
-            for (var i = 0; i < 40; i++)
+            if (!(levelDat.RootTag.First()["Player"]["Inventory"] is NbtList playerInventory)) return false;
+            for (var i = 0; i < playerInventory.Count; i++)
             {
                 var slot = playerInventory[i];
-                if (slot == null) continue;
                 var index = GetWoolIndex(dataFormat, slot);
                 if (index == null) continue;
-                if (_wools[index.Value]) continue;
-                _wools[index.Value] = true;
+                if (wools[index.Value]) continue;
+                wools[index.Value] = true;
                 return true;
             }
 
@@ -201,8 +232,8 @@ namespace LiveSplit.Minecraft
                 var id = slot["id"].StringValue;
                 if (dataFormat >= 1451)
                 {
-                    for (short i = 0; i < _113WoolIds.Length; i++)
-                        if (_113WoolIds[i] == id)
+                    for (short i = 0; i < woolIds113.Length; i++)
+                        if (woolIds113[i] == id)
                             return i;
 
                     return null;
