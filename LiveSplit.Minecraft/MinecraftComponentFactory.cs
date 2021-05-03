@@ -1,17 +1,17 @@
-﻿using LiveSplit.Model;
-using LiveSplit.UI.Components;
-using System;
+﻿using System;
 using System.Reflection;
+using LiveSplit.Model;
+using LiveSplit.UI.Components;
 
 namespace LiveSplit.Minecraft
 {
-    class MinecraftComponentFactory : IComponentFactory
+    internal class MinecraftComponentFactory : IComponentFactory
     {
         public string ComponentName => "Minecraft IGT";
 
         public string Description => "Minecraft IGT by Kohru https://github.com/Jorkoh/LiveSplit.Minecraft";
 
-        public ComponentCategory Category => ComponentCategory.Timer;
+        public ComponentCategory Category => ComponentCategory.Information;
 
         public string UpdateName => ComponentName;
 
@@ -21,6 +21,9 @@ namespace LiveSplit.Minecraft
 
         public Version Version => Assembly.GetExecutingAssembly().GetName().Version;
 
-        public IComponent Create(LiveSplitState state) => new MinecraftComponent(state);
+        public IComponent Create(LiveSplitState state)
+        {
+            return new MinecraftComponent(state);
+        }
     }
 }

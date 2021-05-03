@@ -22,8 +22,8 @@
 
         #region Component Designer generated code
 
-        /// <summary> 
-        /// Required method for Designer support - do not modify 
+        /// <summary>
+        /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
@@ -35,6 +35,9 @@
             this.labelVersion = new System.Windows.Forms.Label();
             this.linkInstructions = new System.Windows.Forms.LinkLabel();
             this.checkBoxAutosplitter = new System.Windows.Forms.CheckBox();
+            this.splitsTxt = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // txtBoxSavesPath
@@ -76,7 +79,7 @@
             // 
             // labelVersion
             // 
-            this.labelVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelVersion.Anchor = ((System.Windows.Forms.AnchorStyles) ((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelVersion.AutoSize = true;
             this.labelVersion.Location = new System.Drawing.Point(10, 463);
             this.labelVersion.Name = "labelVersion";
@@ -87,8 +90,8 @@
             // linkInstructions
             // 
             this.linkInstructions.AutoSize = true;
-            this.linkInstructions.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.linkInstructions.Location = new System.Drawing.Point(33, 261);
+            this.linkInstructions.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (0)));
+            this.linkInstructions.Location = new System.Drawing.Point(13, 424);
             this.linkInstructions.Name = "linkInstructions";
             this.linkInstructions.Size = new System.Drawing.Size(396, 24);
             this.linkInstructions.TabIndex = 11;
@@ -107,10 +110,38 @@
             this.checkBoxAutosplitter.UseVisualStyleBackColor = true;
             this.checkBoxAutosplitter.CheckedChanged += new System.EventHandler(this.CheckBoxAutosplitter_CheckedChanged);
             // 
+            // splitsTxt
+            // 
+            this.splitsTxt.Location = new System.Drawing.Point(113, 164);
+            this.splitsTxt.Name = "splitsTxt";
+            this.splitsTxt.Size = new System.Drawing.Size(356, 20);
+            this.splitsTxt.TabIndex = 13;
+            this.splitsTxt.TextChanged += new System.EventHandler(this.splitsTxt_TextChanged);
+            // 
+            // label1
+            // 
+            this.label1.Location = new System.Drawing.Point(10, 164);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(100, 25);
+            this.label1.TabIndex = 14;
+            this.label1.Text = "Splits (Locations)";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
+            // 
+            // label2
+            // 
+            this.label2.Location = new System.Drawing.Point(10, 132);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(459, 32);
+            this.label2.TabIndex = 15;
+            this.label2.Text = "Comma-separated list of splits. A split is either the exact name of a fast travel" + " location, precisely as it is spelled in the quest book, or \"Respawn\".";
+            // 
             // MinecraftSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.splitsTxt);
             this.Controls.Add(this.checkBoxAutosplitter);
             this.Controls.Add(this.labelSavesPath);
             this.Controls.Add(this.txtBoxSavesPath);
@@ -123,16 +154,22 @@
             this.Load += new System.EventHandler(this.MinecraftSettings_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
-        #endregion
-        private System.Windows.Forms.TextBox txtBoxSavesPath;
-        private System.Windows.Forms.Label labelSavesPath;
+        private System.Windows.Forms.Label label2;
+
+        private System.Windows.Forms.Label label1;
+
+        private System.Windows.Forms.TextBox splitsTxt;
+
         private System.Windows.Forms.Button btnChangeSavesPath;
         private System.Windows.Forms.Button btnResetSavesPath;
+        private System.Windows.Forms.CheckBox checkBoxAutosplitter;
+        private System.Windows.Forms.Label labelSavesPath;
         private System.Windows.Forms.Label labelVersion;
         private System.Windows.Forms.LinkLabel linkInstructions;
-        private System.Windows.Forms.CheckBox checkBoxAutosplitter;
+        private System.Windows.Forms.TextBox txtBoxSavesPath;
+
+        #endregion
     }
 }

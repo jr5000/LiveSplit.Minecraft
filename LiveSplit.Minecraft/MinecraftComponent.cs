@@ -2,13 +2,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
-using fNbt;
 using LiveSplit.Minecraft.Properties;
 using LiveSplit.Model;
 using LiveSplit.UI;
@@ -24,33 +24,24 @@ namespace LiveSplit.Minecraft
         private readonly MinecraftSettings settings;
         private readonly TimerModel timer;
 
-        private readonly string[] woolIds113 =
-        {
-            "white_wool",
-            "orange_wool",
-            "magenta_wool",
-            "light_blue_wool",
-            "yellow_wool",
-            "lime_wool",
-            "pink_wool",
-            "gray_wool",
-            "light_gray_wool",
-            "cyan_wool",
-            "purple_wool",
-            "blue_wool",
-            "brown_wool",
-            "green_wool",
-            "red_wool",
-            "black_wool"
-        };
-
-        private readonly bool[] wools = new bool[16];
+        private double lastPositionX;
+        private double lastPositionY;
+        private double lastPositionZ;
+        private long? lastTickCount;
 
         private string latestSavePath;
         private string latestSaveStatsPath;
+        private string latestSaveLogsPath;
         private DateTime nextAutosplitterCheck;
         private DateTime nextIGTCheck;
-        private FileSystemWatcher watcher;
+
+        private Thread logReadingThread;
+        private bool stopped = false;
+        
+        
+        private string[] Splits = new string[0];
+        private int CurrentSplit;
+        private TimeSpan? LastSplitTime = null;
 
         public MinecraftComponent(LiveSplitState state)
         {
@@ -58,6 +49,10 @@ namespace LiveSplit.Minecraft
 
             timer = new TimerModel {CurrentState = state};
             state.OnStart += OnStart;
+            
+            logReadingThread = new Thread(TailLog);
+            logReadingThread.IsBackground = true;
+            logReadingThread.Start();
         }
 
         public void Update(IInvalidator invalidator, LiveSplitState state, float width, float height, LayoutMode mode)
@@ -66,11 +61,9 @@ namespace LiveSplit.Minecraft
 
             if (ShouldCheckIGT()) UpdateIGT();
 
-            if (Settings.Default.AutosplitterEnabled && ShouldCheckAutosplitter()) UpdateAutosplitter();
-        }
-
-        public void Dispose()
-        {
+            if (ShouldCheckAutosplitter())
+                if (Settings.Default.AutosplitterEnabled)
+                    UpdateAutosplitter();
         }
 
         public Control GetSettingsControl(LayoutMode mode)
@@ -91,9 +84,8 @@ namespace LiveSplit.Minecraft
 
         public string ComponentName => "Minecraft IGT";
 
-        public IDictionary<string, Action> ContextMenuControls { get; }
+        public IDictionary<string, Action> ContextMenuControls => null;
 
-        // We take up no space visually, so we return nothing/zero for visual calls from LiveSplit
         public void DrawHorizontal(Graphics g, LiveSplitState state, float height, Region clipRegion)
         {
         }
@@ -164,91 +156,82 @@ namespace LiveSplit.Minecraft
 
         private void UpdateAutosplitter()
         {
-            var previousLatestSavePath = latestSavePath;
             latestSavePath = FindLatestSavePath();
-            if (latestSavePath != previousLatestSavePath)
-            {
-                watcher?.Dispose();
-                watcher = new FileSystemWatcher
-                {
-                    Path = latestSavePath, NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
-                                                                                   | NotifyFilters.FileName |
-                                                                                   NotifyFilters.DirectoryName |
-                                                                                   NotifyFilters.Size |
-                                                                                   NotifyFilters.Attributes,
-                    Filter = "*.*"
-                };
-                watcher.Renamed += NewLevelDat;
-                watcher.EnableRaisingEvents = true;
-            }
 
             if (timer.CurrentState.CurrentPhase == TimerPhase.NotRunning)
-                for (var i = 0; i < wools.Length; i++)
-                    wools[i] = false;
+            {
+                CurrentSplit = 0;
+                LastSplitTime = null;
+            }
         }
 
-        private void NewLevelDat(object sender, RenamedEventArgs e)
+        static string ConstructSearchText(string split)
         {
-            if (e.Name != "level.dat" || e.OldName != "level.dat_new" ||
-                e.ChangeType != WatcherChangeTypes.Renamed) return;
-            if (timer.CurrentState.CurrentPhase != TimerPhase.Running) return;
-
-            // It's possible that we're so fast that either Minecraft hasn't finished writing the file
-            // or hasn't yet released the filesystem lock, so do the dumb hacky thing of retry for a few milliseconds lol
-            for (var i = 0; i < 5; i++)
-                try
+            if (split.ToLower() == "respawn")
+                return
+                    "Are you sure you want to respawn? \\n\\n     ??????????????????????????????????????????????????????????????????????????????????????????????????????????????????\\n     >> [Yes] <<\\n";
+            return
+                $"Are you sure you want to travel to \\n     {split}?\\n     ??????????????????????????????????????????????????????????????????????????????????????????????????????????????????\\n     >> [Yes] <<\\n";
+        }
+        
+        private void TailLog()
+        {
+            var stopWatch = Stopwatch.StartNew();
+            long lastTime;
+            long readAlready = 0;
+            bool firstRun = true;
+            while (!stopped)
+            {
+                lastTime = stopWatch.ElapsedMilliseconds;
+                string contents;
+                if (latestSaveLogsPath != null)
                 {
-                    if (NewWool(new NbtFile(e.FullPath)))
+                    using (var fileStream = File.Open(Path.Combine(latestSaveLogsPath, "latest.log"), FileMode.Open,
+                        FileAccess.Read, FileShare.ReadWrite))
+                    {
+                        if (fileStream.Length < readAlready)
+                            readAlready = 0;
+                        fileStream.Position = readAlready;
+                        using (var textReader = new StreamReader(fileStream))
+                        {
+                            contents = textReader.ReadToEnd();
+                        }
+
+                        readAlready += contents.Length;
+
+                        if (!firstRun)
+                            MaybeSplit(contents, stopWatch.Elapsed);
+                        else
+                            firstRun = false;
+                    }
+                }
+
+                var waitTime = 50 - (stopWatch.ElapsedMilliseconds - lastTime);
+                if (waitTime > 0)
+                {
+                    Thread.Sleep((int)waitTime);
+                }
+            }
+        }
+
+        private void MaybeSplit(string newContent, TimeSpan currentTime)
+        {
+            while (CurrentSplit < Splits.Length)
+            {
+                var nextSplitSearch = ConstructSearchText(Splits[CurrentSplit]);
+                if (!newContent.Contains(nextSplitSearch)) break;
+
+                if (timer.CurrentState.CurrentPhase == TimerPhase.Running)
+                {
+                    if (LastSplitTime == null || currentTime - LastSplitTime >= TimeSpan.FromSeconds(5))
+                    {
+                        CurrentSplit++;
                         timer.Split();
-                    return;
-                }
-                catch (Exception)
-                {
-                    Thread.Sleep(1);
-                }
-        }
-
-        private bool NewWool(NbtFile levelDat)
-        {
-            var dataFormat = levelDat.RootTag.First()["DataVersion"]?.IntValue ?? -1;
-            if (!(levelDat.RootTag.First()["Player"]["Inventory"] is NbtList playerInventory)) return false;
-            for (var i = 0; i < playerInventory.Count; i++)
-            {
-                var slot = playerInventory[i];
-                var index = GetWoolIndex(dataFormat, slot);
-                if (index == null) continue;
-                if (wools[index.Value]) continue;
-                wools[index.Value] = true;
-                return true;
-            }
-
-            return false;
-        }
-
-        private short? GetWoolIndex(int dataFormat, NbtTag slot)
-        {
-            if (slot["id"].TagType == NbtTagType.String)
-            {
-                var id = slot["id"].StringValue;
-                if (dataFormat >= 1451)
-                {
-                    for (short i = 0; i < woolIds113.Length; i++)
-                        if (woolIds113[i] == id)
-                            return i;
-
-                    return null;
+                        LastSplitTime = currentTime;
+                    }
                 }
 
-                if (id != "minecraft:wool") return null;
-                var damage = slot["Damage"].ShortValue;
-                return damage;
-            }
-            else
-            {
-                var id = slot["id"].ShortValue;
-                if (id != 35) return null;
-                var damage = slot["Damage"].ShortValue;
-                return damage;
+                newContent = newContent.Substring(newContent.IndexOf(nextSplitSearch) + nextSplitSearch.Length);
             }
         }
 
@@ -283,7 +266,23 @@ namespace LiveSplit.Minecraft
 
         private void OnStart(object sender, EventArgs e)
         {
-            latestSaveStatsPath = Path.Combine(FindLatestSavePath(), "stats");
+            var latestSavePath = FindLatestSavePath();
+            latestSaveStatsPath = Path.Combine(latestSavePath, "stats");
+            if(Settings.Default.SavesPath != null && Settings.Default.SavesPath.Contains("saves"))
+                latestSaveLogsPath = Path.Combine(Settings.Default.SavesPath.Substring(0, Settings.Default.SavesPath.IndexOf("saves")), "logs");
+            Splits = Settings.Default.Splits.Split(',').Select(name=>name.Trim()).ToArray();
+            if (Splits.Length == 0)
+            {
+                MessageBox.Show("No splits configured.\n\n"+
+                                "To add splits, open the settings id edit splits and add the fast travel locations.\n\n"+
+                                "The list should be comma-separated.\n\n"+
+                                "Make sure the locations are spelled the way they are in game.");
+            }
+        }
+
+        public void Dispose()
+        {
+            stopped = true;
         }
     }
 }
