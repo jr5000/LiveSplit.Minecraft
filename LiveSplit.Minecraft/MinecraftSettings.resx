@@ -117,4 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="label2.Text" xml:space="preserve">
+    <value>Comma-separated list of splits. A split is either the exact name of a fast travel location, precisely as it is spelled in the quest book, "Respawn" (without the quotes), or a unique piece of dialog surrounded by quotes (e.g. "Speak to Griphook, he'll help you." with the quotes)</value>
+  </data>
+  <data name="textBox1.Text" xml:space="preserve">
+    <value>Respawn,The Ravenclaw Common Room,Defence Against The Dark Arts Classroom,Potions Classroom,Charms Classroom,The Library,The Library,Charms Classroom,Charms Classroom,Defence Against The Dark Arts Classroom,The Greenhouses,Transfiguration Classroom,Defence Against The Dark Arts Classroom,Flourish and Blotts,The Attic</value>
+  </data>
 </root>
