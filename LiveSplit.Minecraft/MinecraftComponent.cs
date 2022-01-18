@@ -18,6 +18,9 @@ namespace LiveSplit.Minecraft
 {
     public class MinecraftComponent : IComponent
     {
+        private const int NUM_RETRIES = 50;
+        private const int RETRY_MS = 10;
+        
         // Limit the rate at which some operations are done since they are too expensive to run on every udpate()
         private const int AUTOSPLITTER_CHECK_DELAY = 500;
         private const int IGT_CHECK_DELAY = 1000;
@@ -58,6 +61,7 @@ namespace LiveSplit.Minecraft
 
             timer = new TimerModel {CurrentState = state};
             state.OnStart += OnStart;
+            state.OnReset += OnReset;
         }
 
         public void Update(IInvalidator invalidator, LiveSplitState state, float width, float height, LayoutMode mode)
@@ -168,6 +172,11 @@ namespace LiveSplit.Minecraft
             latestSavePath = FindLatestSavePath();
             if (latestSavePath != previousLatestSavePath)
             {
+                if (timer.CurrentState.CurrentPhase == TimerPhase.Running)
+                {
+                    ResetWools();
+                    timer.Reset(true);
+                }
                 watcher?.Dispose();
                 watcher = new FileSystemWatcher
                 {
@@ -179,32 +188,121 @@ namespace LiveSplit.Minecraft
                     Filter = "*.*"
                 };
                 watcher.Renamed += NewLevelDat;
+                watcher.Created += SessionLock;
+                watcher.Changed += SessionLock;
                 watcher.EnableRaisingEvents = true;
+
+                CheckExistingSessionLock();
+
             }
 
             if (timer.CurrentState.CurrentPhase == TimerPhase.NotRunning)
-                for (var i = 0; i < wools.Length; i++)
-                    wools[i] = false;
+                ResetWools();
+        }
+
+        private void ResetWools()
+        {
+            for (var i = 0; i < wools.Length; i++)
+                wools[i] = false;
+        }
+
+        private void CheckExistingSessionLock()
+        {
+            var fullPath = Path.Combine(latestSavePath, "session.lock");
+            if (File.Exists(fullPath)) MaybeStart(fullPath);
+        }
+
+        private long? ReadTimestampFromSessionLock(string fullPath)
+        {
+            var startingLatestSavePath = latestSavePath;
+            // It's possible that we're so fast that either Minecraft hasn't finished writing the file
+            // or hasn't yet released the filesystem lock, so do the dumb hacky thing of retry for a few milliseconds lol
+            for (var i = 0; i < NUM_RETRIES && latestSavePath == startingLatestSavePath; i++)
+                try
+                {
+                    using (var reader = new BinaryReader(new FileStream(fullPath, FileMode.Open)))
+                    {
+                        var bytes = reader.ReadBytes(8);
+                        if (BitConverter.IsLittleEndian)
+                        {
+                            Array.Reverse(bytes);
+                        }
+
+                        return BitConverter.ToInt64(bytes, 0);
+                    }
+                }
+                catch (Exception)
+                {
+                    Thread.Sleep(RETRY_MS);
+                }
+
+            MessageBox.Show("Could not read session.lock");
+            return null;
+        }
+
+        private void MaybeStart(string fullPath)
+        {
+            var timestamp = ReadTimestampFromSessionLock(fullPath);
+            if (!timestamp.HasValue)
+                return;
+
+            var curr = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            var diffInMs = curr - timestamp.Value;
+            //MessageBox.Show($"diffInMs: {diffInMs}, timestamp: {timestamp}, curr: {curr}");
+            if (diffInMs > 1000 * 10)
+                return;
+            timer.CurrentState.Run.Offset = TimeSpan.FromMilliseconds(diffInMs);
+            timer.Start();
+            //MessageBox.Show($"diffInMs: {diffInMs}\n\ncurrentTime: {timer.CurrentState.CurrentTime.RealTime.Value.TotalMilliseconds}");
+            
+            if (File.Exists(Path.Combine(latestSavePath, "level.dat")))
+            {
+                var startingLatestSavePath = latestSavePath;
+                int i;
+                for (i = 0; i < NUM_RETRIES && latestSavePath == startingLatestSavePath; i++)
+                    try
+                    {
+                        var levelDat = new NbtFile(Path.Combine(latestSavePath, "level.dat"));
+                        while (NewWool(levelDat)) ;
+                    }
+                    catch (Exception)
+                    {
+                        Thread.Sleep(RETRY_MS);
+                    }
+
+                if (i == 5)
+                {
+                    MessageBox.Show("Couldn't read level.dat");
+                }
+            }
+        }
+
+        private void SessionLock(object sender, FileSystemEventArgs e)
+        {
+            if (timer.CurrentState.CurrentPhase == TimerPhase.Running) return;
+            if (e.Name == "session.lock") MaybeStart(e.FullPath);
         }
 
         private void NewLevelDat(object sender, RenamedEventArgs e)
         {
+            if (e.Name == "session.lock") MaybeStart(e.FullPath);
             if (e.Name != "level.dat" || e.OldName != "level.dat_new" ||
                 e.ChangeType != WatcherChangeTypes.Renamed) return;
             if (timer.CurrentState.CurrentPhase != TimerPhase.Running) return;
 
             // It's possible that we're so fast that either Minecraft hasn't finished writing the file
             // or hasn't yet released the filesystem lock, so do the dumb hacky thing of retry for a few milliseconds lol
-            for (var i = 0; i < 5; i++)
+            for (var i = 0; i < NUM_RETRIES; i++)
                 try
                 {
-                    if (NewWool(new NbtFile(e.FullPath)))
+                    var nbtFile = new NbtFile(e.FullPath);
+                    while (NewWool(nbtFile))
                         timer.Split();
                     return;
                 }
                 catch (Exception)
                 {
-                    Thread.Sleep(1);
+                    Thread.Sleep(RETRY_MS);
                 }
         }
 
@@ -284,6 +382,11 @@ namespace LiveSplit.Minecraft
         private void OnStart(object sender, EventArgs e)
         {
             latestSaveStatsPath = Path.Combine(FindLatestSavePath(), "stats");
+        }
+
+        private void OnReset(object sender, TimerPhase timerPhase)
+        {
+            timer.CurrentState.Run.Offset = TimeSpan.Zero;
         }
     }
 }

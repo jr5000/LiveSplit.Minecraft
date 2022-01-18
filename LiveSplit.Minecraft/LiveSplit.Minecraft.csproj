@@ -36,7 +36,7 @@
     </Reference>
     <Reference Include="LiveSplit.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\debug\LiveSplit.Core.dll</HintPath>
+      <HintPath>..\..\LiveSplit\LiveSplit\bin\Debug\LiveSplit.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -50,7 +50,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="UpdateManager, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\debug\UpdateManager.dll</HintPath>
+      <HintPath>..\..\LiveSplit\LiveSplit\bin\Debug\UpdateManager.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +85,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /Y $(TargetPath) $(SolutionDir)\Components\$(TargetFileName)</PostBuildEvent>
+    <PostBuildEvent>copy /Y $(TargetPath) $(SolutionDir)Components\$(TargetFileName)</PostBuildEvent>
   </PropertyGroup>
 </Project>
